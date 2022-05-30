@@ -1,0 +1,1 @@
+export const quartersPopulationByLevel = [0, 100, 250, 500, 1000, 2000, 4500, 10000, 20000, 45000, 100000];
