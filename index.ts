@@ -1,6 +1,7 @@
 export * from './troops/troopsConsts';
 export * from './materialsCost';
 
+export * from './buildings/levelUpCosts/buildingLevelUpMaterialCostsByName';
 export * from './buildings/levelUpCosts/arsenalLevelUpConsts';
 export * from './buildings/levelUpCosts/centerBuildingLevelUpConsts';
 export * from './buildings/levelUpCosts/cropFarmLevelUpConsts';
