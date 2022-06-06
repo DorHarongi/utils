@@ -1,1 +1,1 @@
-export const wallDefenseByLevel = [100, 500, 1000, 2000, 4000, 6000, 8000, 16000, 32000, 64000];
+export const wallDefenseByLevel = [0, 100, 500, 1000, 2000, 4000, 6000, 8000, 16000, 32000, 64000];
