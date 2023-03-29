@@ -1,3 +1,3 @@
-export const factoriesProductionSpeedByLevel = [0, 0.25, 0.5, 0.75, 1.25, 2.25, 4, 7, 12, 25, 45];
+export const factoriesProductionSpeedByLevel = [0, 0.25, 0.5, 1, 2, 5, 12.5, 27.5, 62.5, 137.5, 312.5];
 
-export const singleWorkerProductionSpeedPerSecond: number = 0.05;
+export const singleWorkerProductionSpeedPerSecond: number = 0.01;

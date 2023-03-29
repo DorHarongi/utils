@@ -36,6 +36,8 @@ export const catapultsDefenceStat: number = 0;
 export const catapultsMinimumArsenalLevel: number = 8;
 export const catapultsMaterialsCost: MaterialsCost = {wood: 35000, stones: 35000, crop: 25000 };
 
+export const lootingAbilityOfTroops: number = 100;
+
 export const troopUnlockByLevel: {[level: number] : string; } = {
     [axeFighterMinimumArsenalLevel]: "Axe Fighter",
     [archerMinimumArsenalLevel]: "Archer",
