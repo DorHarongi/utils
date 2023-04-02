@@ -1,12 +1,12 @@
 import { MaterialsCost } from "../materialsCost";
 
-export const spearFighterAttackingStat: number = 5;
-export const spearFighterDefenceStat: number = 1;
+export const spearFighterAttackingStat: number = 4;
+export const spearFighterDefenceStat: number = 2;
 export const spearFighterMinimumArsenalLevel: number = 1;
 export const spearFighterMaterialsCost: MaterialsCost = {wood: 100, stones: 100, crop: 500 };
 
-export const swordFighterAttackingStat: number = 3;
-export const swordFighterDefenceStat: number = 3;
+export const swordFighterAttackingStat: number = 2;
+export const swordFighterDefenceStat: number = 4;
 export const swordFighterMinimumArsenalLevel: number = 1;
 export const swordFighterMaterialsCost: MaterialsCost = {wood: 100, stones: 100, crop: 500 };
 
@@ -32,7 +32,7 @@ export const horsemenMinimumArsenalLevel: number = 6;
 export const horsemenMaterialsCost: MaterialsCost = {wood: 15000, stones: 15000, crop: 15000 };
 
 export const catapultsAttackingStat: number = 150;
-export const catapultsDefenceStat: number = 0;
+export const catapultsDefenceStat: number = 1;
 export const catapultsMinimumArsenalLevel: number = 8;
 export const catapultsMaterialsCost: MaterialsCost = {wood: 35000, stones: 35000, crop: 25000 };
 
