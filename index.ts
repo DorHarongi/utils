@@ -1,4 +1,5 @@
 export * from './troops/troopsConsts';
+export * from './troops/energyConsts';
 export * from './materialsCost';
 
 export * from './buildings/levelUpCosts/buildingLevelUpMaterialCostsByName';
