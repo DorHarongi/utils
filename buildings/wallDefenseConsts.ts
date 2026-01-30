@@ -1,4 +1,4 @@
-// Balanced wall defense - meaningful at all levels but doesn't make attacking impossible
-// Old exponential (2x per level) made max walls impenetrable (12,800 defense)
-// New scaling: strong progression but beatable with a real army investment
-export const wallDefenseByLevel = [0, 50, 130, 270, 480, 800, 1250, 1850, 2650, 3700, 5000];
+// Balanced wall defense - smooth polynomial scaling
+// Early levels buffed vs original (L1 was only 25), late game similar to original
+// Level 10 = 14,000 defense (~350 Sword Fighters needed)
+export const wallDefenseByLevel = [0, 75, 200, 450, 900, 1600, 2800, 4500, 7000, 10000, 14000];
