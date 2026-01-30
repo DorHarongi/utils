@@ -74,7 +74,7 @@ export const QUESTS: Quest[] = [
         title: "Train Your First Army",
         description: "Train 10 soldiers of any type. Soldiers take up population and fight for you in battles. Each soldier uses 1 population slot.",
         hint: "Go to Arsenal and train troops",
-        rewards: { wood: 0, stone: 0, crop: 0 },
+        rewards: { wood: 2000, stone: 2000, crop: 3000 },
         condition: { 
             type: QuestCompletionType.TRAIN_TROOPS, 
             count: 10 
