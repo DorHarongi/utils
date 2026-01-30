@@ -22,3 +22,5 @@ export * from './buildings/wallDefenseConsts';
 export * from './buildings/warehouseStorageConsts';
 
 export * from './quests';
+
+export * from './bosses/bossConsts';
