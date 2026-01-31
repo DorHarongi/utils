@@ -72,13 +72,13 @@ export const bossRewardAmounts: Record<BossTier, number> = {
     [BossTier.LEGENDARY]: 25000000  // Level 10
 };
 
-// Boss damage back percentage per tier (scales with difficulty)
-// Lower tier = higher % because HP is lower, keeps losses reasonable
-export const bossDamageBackPercent: Record<BossTier, number> = {
-    [BossTier.COMMON]: 0.05,     // 5% of HP
-    [BossTier.RARE]: 0.04,       // 4% of HP
-    [BossTier.EPIC]: 0.03,       // 3% of HP
-    [BossTier.LEGENDARY]: 0.02   // 2% of HP
+// Boss max damage back per tier (flat caps, not scaling with HP)
+// This determines max troop losses per attack
+export const bossMaxDamageBack: Record<BossTier, number> = {
+    [BossTier.COMMON]: 3000,
+    [BossTier.RARE]: 12000,
+    [BossTier.EPIC]: 40000,
+    [BossTier.LEGENDARY]: 100000
 };
 
 // Boss claim duration (48 hours in milliseconds)
