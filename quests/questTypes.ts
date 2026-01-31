@@ -3,7 +3,8 @@ import { MaterialsCost } from "../materialsCost";
 export enum QuestCompletionType {
     BUILDING_LEVEL = 'BUILDING_LEVEL',
     TRAIN_TROOPS = 'TRAIN_TROOPS',
-    HIRE_WORKERS = 'HIRE_WORKERS'
+    HIRE_WORKERS = 'HIRE_WORKERS',
+    JOIN_CLAN = 'JOIN_CLAN'
 }
 
 export interface QuestReward {
@@ -37,7 +38,7 @@ export interface QuestCompletionResult {
 
 // Action types that can trigger quest completion
 export interface QuestAction {
-    type: 'UPGRADE_BUILDING' | 'TRAIN_TROOPS' | 'HIRE_WORKERS';
+    type: 'UPGRADE_BUILDING' | 'TRAIN_TROOPS' | 'HIRE_WORKERS' | 'JOIN_CLAN';
     buildingName?: string;
     newLevel?: number;
     totalTroops?: number;

@@ -120,7 +120,7 @@ export const QUESTS: Quest[] = [
         title: "Upgrade Stone Warehouse",
         description: "Upgrade your Stone Warehouse to level 2. Your stone storage increases from 5,000 to 12,500!",
         hint: "Click the Stone Warehouse building",
-        rewards: { wood: 12500, stone: 12500, crop: 12500 },
+        rewards: { wood: 2500, stone: 2500, crop: 2500 },
         condition: { 
             type: QuestCompletionType.BUILDING_LEVEL, 
             buildingName: 'stoneWarehouse', 
@@ -129,6 +129,18 @@ export const QUESTS: Quest[] = [
     },
     {
         id: 11,
+        title: "Upgrade Crop Warehouse",
+        description: "Upgrade your Crop Warehouse to level 2. Your crop storage increases from 5,000 to 12,500!",
+        hint: "Click the Crop Warehouse building",
+        rewards: { wood: 12500, stone: 12500, crop: 12500 },
+        condition: { 
+            type: QuestCompletionType.BUILDING_LEVEL, 
+            buildingName: 'cropWarehouse', 
+            level: 2 
+        }
+    },
+    {
+        id: 12,
         title: "Upgrade Center Building Again",
         description: "Upgrade your Center Building to level 3. This unlocks level 3 for all buildings - bigger upgrades ahead!",
         hint: "Click the Center Building",
@@ -140,7 +152,7 @@ export const QUESTS: Quest[] = [
         }
     },
     {
-        id: 12,
+        id: 13,
         title: "Upgrade Arsenal Further",
         description: "Upgrade your Arsenal to level 3. This unlocks even more powerful troop types!",
         hint: "Click the Arsenal building",
@@ -152,7 +164,7 @@ export const QUESTS: Quest[] = [
         }
     },
     {
-        id: 13,
+        id: 14,
         title: "Build Your Defenses",
         description: "Upgrade your Wall to level 2. Walls add defense bonus to your village, making it harder to attack!",
         hint: "Click the Wall building",
@@ -164,7 +176,7 @@ export const QUESTS: Quest[] = [
         }
     },
     {
-        id: 14,
+        id: 15,
         title: "Diplomatic Relations",
         description: "Upgrade your Embassy to level 2. The Embassy allows you to interact with other players through clans!",
         hint: "Click the Embassy building",
@@ -176,15 +188,13 @@ export const QUESTS: Quest[] = [
         }
     },
     {
-        id: 15,
+        id: 16,
         title: "Join the Community",
-        description: "Upgrade your Embassy to level 3. Now you can create or join a clan! Team up with other players for support and glory!",
-        hint: "Click the Embassy building",
+        description: "Join or create a clan! Team up with other players for raids, support, and glory!",
+        hint: "Go to your Embassy and join or create a clan",
         rewards: { wood: 5000, stone: 5000, crop: 5000 },
         condition: { 
-            type: QuestCompletionType.BUILDING_LEVEL, 
-            buildingName: 'embassy', 
-            level: 3 
+            type: QuestCompletionType.JOIN_CLAN
         }
     }
 ];
