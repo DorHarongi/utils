@@ -66,9 +66,9 @@ export const getDistanceBonusText = (distance: number): string => {
 // Rewards: warehouse level rewards per tier
 // Reward fills warehouse of this level for each clan member
 export const bossRewardWarehouseLevel: Record<BossTier, number> = {
-    [BossTier.COMMON]: 3,      // 30,000 of each resource
-    [BossTier.RARE]: 5,        // 187,500 of each resource
-    [BossTier.EPIC]: 7,        // 1,250,000 of each resource
+    [BossTier.COMMON]: 4,      // 75,000 of each resource
+    [BossTier.RARE]: 6,        // 375,000 of each resource
+    [BossTier.EPIC]: 8,        // 2,500,000 of each resource
     [BossTier.LEGENDARY]: 10   // 25,000,000 of each resource
 };
 
