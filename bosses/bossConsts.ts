@@ -7,12 +7,12 @@ export enum BossTier {
     LEGENDARY = 'legendary'
 }
 
-// HP ranges per tier (min, max)
+// HP ranges per tier (min, max) - 10% reduced for balance
 export const bossHpRanges: Record<BossTier, { min: number; max: number }> = {
-    [BossTier.COMMON]: { min: 50000, max: 100000 },
-    [BossTier.RARE]: { min: 250000, max: 500000 },
-    [BossTier.EPIC]: { min: 1000000, max: 2000000 },
-    [BossTier.LEGENDARY]: { min: 5000000, max: 10000000 }
+    [BossTier.COMMON]: { min: 45000, max: 90000 },
+    [BossTier.RARE]: { min: 225000, max: 450000 },
+    [BossTier.EPIC]: { min: 900000, max: 1800000 },
+    [BossTier.LEGENDARY]: { min: 4500000, max: 9000000 }
 };
 
 // Boss names per tier
