@@ -168,7 +168,7 @@ export const QUESTS: Quest[] = [
         title: "Build Your Defenses",
         description: "Upgrade your Wall to level 2. Walls add defense bonus to your village, making it harder to attack!",
         hint: "Click the Wall building",
-        rewards: { wood: 3000, stone: 3750, crop: 750 },
+        rewards: { wood: 6750, stone: 8500, crop: 1700 },
         condition: { 
             type: QuestCompletionType.BUILDING_LEVEL, 
             buildingName: 'wall', 
@@ -177,21 +177,9 @@ export const QUESTS: Quest[] = [
     },
     {
         id: 15,
-        title: "Diplomatic Relations",
-        description: "Upgrade your Embassy to level 2. The Embassy allows you to interact with other players through clans!",
-        hint: "Click the Embassy building",
-        rewards: { wood: 7500, stone: 9375, crop: 1875 },
-        condition: { 
-            type: QuestCompletionType.BUILDING_LEVEL, 
-            buildingName: 'embassy', 
-            level: 2 
-        }
-    },
-    {
-        id: 16,
         title: "Join the Community",
-        description: "Join or create a clan! Team up with other players for raids, support, and glory!",
-        hint: "Go to your Embassy and join or create a clan",
+        description: "Join or create a clan! Team up with other players for raids, support, and glory! You'll need to upgrade your Embassy to level 3 first.",
+        hint: "Upgrade Embassy to level 3, then join or create a clan",
         rewards: { wood: 5000, stone: 5000, crop: 5000 },
         condition: { 
             type: QuestCompletionType.JOIN_CLAN
