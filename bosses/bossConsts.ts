@@ -7,12 +7,12 @@ export enum BossTier {
     LEGENDARY = 'legendary'
 }
 
-// HP ranges per tier (min, max) - 10% reduced for balance
+// HP ranges per tier (min, max)
 export const bossHpRanges: Record<BossTier, { min: number; max: number }> = {
-    [BossTier.COMMON]: { min: 45000, max: 90000 },
-    [BossTier.RARE]: { min: 225000, max: 450000 },
-    [BossTier.EPIC]: { min: 900000, max: 1800000 },
-    [BossTier.LEGENDARY]: { min: 4500000, max: 9000000 }
+    [BossTier.COMMON]: { min: 40000, max: 80000 },
+    [BossTier.RARE]: { min: 200000, max: 400000 },
+    [BossTier.EPIC]: { min: 800000, max: 1600000 },
+    [BossTier.LEGENDARY]: { min: 4000000, max: 8000000 }
 };
 
 // Boss names per tier
@@ -63,13 +63,22 @@ export const getDistanceBonusText = (distance: number): string => {
     return `${percentage}% damage`;
 };
 
-// Rewards: warehouse level rewards per tier
-// Reward fills warehouse of this level for each clan member
-export const bossRewardWarehouseLevel: Record<BossTier, number> = {
-    [BossTier.COMMON]: 4,      // 75,000 of each resource
-    [BossTier.RARE]: 6,        // 375,000 of each resource
-    [BossTier.EPIC]: 8,        // 2,500,000 of each resource
-    [BossTier.LEGENDARY]: 10   // 25,000,000 of each resource
+// Rewards: direct resource amounts per tier
+// Using interpolated values for half-levels (e.g., 5.5 = avg of level 5 and 6)
+export const bossRewardAmounts: Record<BossTier, number> = {
+    [BossTier.COMMON]: 331250,      // Level 5.5 (between 187,500 and 475,000)
+    [BossTier.RARE]: 1250000,       // Level 7
+    [BossTier.EPIC]: 6500000,       // Level 8.5 (between 3,000,000 and 10,000,000)
+    [BossTier.LEGENDARY]: 25000000  // Level 10
+};
+
+// Boss damage back percentage per tier (scales with difficulty)
+// Lower tier = higher % because HP is lower, keeps losses reasonable
+export const bossDamageBackPercent: Record<BossTier, number> = {
+    [BossTier.COMMON]: 0.05,     // 5% of HP
+    [BossTier.RARE]: 0.04,       // 4% of HP
+    [BossTier.EPIC]: 0.03,       // 3% of HP
+    [BossTier.LEGENDARY]: 0.02   // 2% of HP
 };
 
 // Boss claim duration (48 hours in milliseconds)
