@@ -75,8 +75,8 @@ export const bossRewardWarehouseLevel: Record<BossTier, number> = {
 // Boss claim duration (48 hours in milliseconds)
 export const BOSS_CLAIM_DURATION_MS = 48 * 60 * 60 * 1000;
 
-// Boss despawn duration for unclaimed bosses (24 hours)
-export const BOSS_UNCLAIMED_DESPAWN_MS = 24 * 60 * 60 * 1000;
+// Boss despawn duration for unclaimed bosses (48 hours)
+export const BOSS_UNCLAIMED_DESPAWN_MS = 48 * 60 * 60 * 1000;
 
 // Maximum bosses on map at once
 export const MAX_BOSSES_ON_MAP = 10;
@@ -92,5 +92,5 @@ export const bossMinimapColors: Record<BossTier, string> = {
     [BossTier.LEGENDARY]: '#f1c40f'    // Gold
 };
 
-// Claimed boss indicator color
-export const CLAIMED_BOSS_COLOR = '#27ae60'; // Green for your clan's boss
+// Claimed boss indicator color (orange - distinct from green villages)
+export const CLAIMED_BOSS_COLOR = '#e67e22';
