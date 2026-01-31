@@ -73,13 +73,13 @@ export const bossRewardAmounts: Record<BossTier, number> = {
 };
 
 // Boss max damage back per tier (flat caps, not scaling with HP)
-// Calibrated for 25% loss with minimum viable army at 200% distance bonus
-// Formula: avgHP / 2 (distance bonus) * 0.25
+// Calibrated for ~10% loss with well-prepared armies, 25% cap for smaller armies
+// Lower values make PvE profitable while still having meaningful troop cost
 export const bossMaxDamageBack: Record<BossTier, number> = {
-    [BossTier.COMMON]: 7500,      // 60k avg HP → 30k raw dmg needed → 25% = 7.5k
-    [BossTier.RARE]: 37500,       // 300k avg HP → 150k raw dmg needed → 25% = 37.5k
-    [BossTier.EPIC]: 150000,      // 1.2M avg HP → 600k raw dmg needed → 25% = 150k
-    [BossTier.LEGENDARY]: 750000  // 6M avg HP → 3M raw dmg needed → 25% = 750k
+    [BossTier.COMMON]: 1000,      // ~10% loss for 10k attack army
+    [BossTier.RARE]: 5000,        // ~10% loss for 50k attack army
+    [BossTier.EPIC]: 15000,       // ~10% loss for 150k attack army
+    [BossTier.LEGENDARY]: 50000   // ~10% loss for 500k attack army, requires clan for profit
 };
 
 // Boss claim duration (48 hours in milliseconds)
