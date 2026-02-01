@@ -44,12 +44,12 @@ stop_services() {
   log "Stopping services..."
   
   # Kill Node/Angular processes by pattern (safe - won't kill this bash script)
-  pkill -f "ng serve" 2>/dev/null
-  pkill -f "node main.js" 2>/dev/null
-  pkill -f "node db-updator.js" 2>/dev/null
+  pkill -9 -f "ng serve" 2>/dev/null
+  pkill -9 -f "node main.js" 2>/dev/null
+  pkill -9 -f "node db-updator.js" 2>/dev/null
   
-  # Kill the bash processes running our services (using the marker comment)
-  pkill -f "PASIFLORA_SERVICE_MARKER" 2>/dev/null
+  # Kill the bash processes running our services (using PASIFLORA_SVC env var in command)
+  pkill -9 -f "PASIFLORA_SVC" 2>/dev/null
   
   # Close terminal windows by their title using wmctrl (if available)
   if command -v wmctrl &> /dev/null; then
@@ -118,32 +118,14 @@ start_services() {
   cd "$PASIFLORA_DIR"
   
   # Start Angular client
-  # The PASIFLORA_SERVICE_MARKER comment allows pkill to find these bash processes
-  gnome-terminal --title="Pasiflora-Client" -- bash -c "
-    : PASIFLORA_SERVICE_MARKER
-    source ~/.nvm/nvm.sh
-    cd $PASIFLORA_DIR/client
-    echo '=== Angular Client ==='
-    ng serve --configuration=production --host 0.0.0.0 --port 80 --disable-host-check
-  " &
+  # PASIFLORA_SVC env var allows pkill to find these bash processes
+  gnome-terminal --title="Pasiflora-Client" -- bash -c "export PASIFLORA_SVC=client; source ~/.nvm/nvm.sh; cd $PASIFLORA_DIR/client; echo '=== Angular Client ==='; ng serve --configuration=production --host 0.0.0.0 --port 80 --disable-host-check" &
   
   # Start User Service
-  gnome-terminal --title="Pasiflora-UserService" -- bash -c "
-    : PASIFLORA_SERVICE_MARKER
-    source ~/.nvm/nvm.sh
-    cd $PASIFLORA_DIR/userService/dist
-    echo '=== User Service ==='
-    node main.js
-  " &
+  gnome-terminal --title="Pasiflora-UserService" -- bash -c "export PASIFLORA_SVC=userservice; source ~/.nvm/nvm.sh; cd $PASIFLORA_DIR/userService/dist; echo '=== User Service ==='; node main.js" &
   
   # Start DB Updator
-  gnome-terminal --title="Pasiflora-DBUpdator" -- bash -c "
-    : PASIFLORA_SERVICE_MARKER
-    source ~/.nvm/nvm.sh
-    cd $PASIFLORA_DIR/dbUpdator
-    echo '=== DB Updator ==='
-    node db-updator.js
-  " &
+  gnome-terminal --title="Pasiflora-DBUpdator" -- bash -c "export PASIFLORA_SVC=dbupdator; source ~/.nvm/nvm.sh; cd $PASIFLORA_DIR/dbUpdator; echo '=== DB Updator ==='; node db-updator.js" &
   
   log "Services started in separate terminals."
 }
