@@ -41,14 +41,12 @@ export const bossSpawnWeights: Record<BossTier, number> = {
 
 // Distance bonus calculation
 // Returns damage multiplier based on distance (in grid cells)
-// Max bonus at distance 0-5, decreasing as distance increases
+// Bonus for being close, no penalty for being far
 export const getDistanceDamageMultiplier = (distance: number): number => {
-    if (distance <= 5) return 2.0;      // 200% damage
-    if (distance <= 10) return 1.75;    // 175% damage  
-    if (distance <= 20) return 1.5;     // 150% damage
-    if (distance <= 30) return 1.25;    // 125% damage
-    if (distance <= 50) return 1.0;     // 100% damage (base)
-    return 0.75;                         // 75% damage for very far attacks
+    if (distance <= 5) return 1.75;     // 175% damage
+    if (distance <= 10) return 1.5;     // 150% damage  
+    if (distance <= 20) return 1.25;    // 125% damage
+    return 1.0;                          // 100% damage (base)
 };
 
 // Distance bonus display text
