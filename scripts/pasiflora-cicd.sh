@@ -4,9 +4,8 @@
 # Pasiflora Smart CI/CD Script
 # ============================================
 
-# If double-clicked (has DISPLAY but no terminal), open in gnome-terminal
-# Use PASIFLORA_BACKGROUND=1 to run without terminal (e.g., from cron/startup)
-if [ ! -t 0 ] && [ -n "$DISPLAY" ] && [ -z "$PASIFLORA_BACKGROUND" ]; then
+# If not running in a terminal, relaunch in gnome-terminal
+if [ ! -t 0 ]; then
   gnome-terminal --title="Pasiflora-CICD" -- bash -c "$0; exec bash"
   exit 0
 fi
