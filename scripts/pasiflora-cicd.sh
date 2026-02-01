@@ -3,6 +3,12 @@
 # ============================================
 # Pasiflora Smart CI/CD Script
 # ============================================
+
+# If not running in a terminal, relaunch in gnome-terminal
+if [ ! -t 0 ]; then
+  gnome-terminal --title="Pasiflora-CICD" -- bash -c "$0; exec bash"
+  exit 0
+fi
 # Polls for git changes, auto-pulls, builds, and restarts services
 # Run this script ONCE - it will loop forever and watch for changes
 #
