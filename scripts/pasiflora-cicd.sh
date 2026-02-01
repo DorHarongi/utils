@@ -13,6 +13,32 @@
 #   - https://github.com/DorHarongi/dbUpdator
 
 PASIFLORA_DIR=~/Desktop/pasiflora
+LOCKFILE="/tmp/pasiflora-cicd.lock"
+
+# ============================================
+# Prevent multiple instances
+# ============================================
+if [ -f "$LOCKFILE" ]; then
+  OLD_PID=$(cat "$LOCKFILE")
+  if kill -0 "$OLD_PID" 2>/dev/null; then
+    echo "ERROR: Another instance of this script is already running (PID: $OLD_PID)"
+    echo "To kill it and start fresh, run:"
+    echo "  kill $OLD_PID; rm $LOCKFILE"
+    exit 1
+  else
+    echo "Removing stale lock file..."
+    rm -f "$LOCKFILE"
+  fi
+fi
+
+# Write our PID to lock file
+echo $$ > "$LOCKFILE"
+
+# Clean up lock file on exit
+cleanup() {
+  rm -f "$LOCKFILE"
+}
+trap cleanup EXIT
 
 # Configuration
 BRANCH=dev
