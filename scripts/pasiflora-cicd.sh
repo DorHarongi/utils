@@ -48,17 +48,14 @@ stop_services() {
   pkill -f "node main.js" 2>/dev/null
   pkill -f "node db-updator.js" 2>/dev/null
   
-  # Close terminal windows by their title using wmctrl
-  # (gnome-terminal forks immediately so PID tracking doesn't work)
+  # Kill the bash processes running our services (using the marker comment)
+  pkill -f "PASIFLORA_SERVICE_MARKER" 2>/dev/null
+  
+  # Close terminal windows by their title using wmctrl (if available)
   if command -v wmctrl &> /dev/null; then
     wmctrl -c "Pasiflora-Client" 2>/dev/null
     wmctrl -c "Pasiflora-UserService" 2>/dev/null
     wmctrl -c "Pasiflora-DBUpdator" 2>/dev/null
-  else
-    # Fallback: kill bash processes with our marker in their command
-    pkill -f "Pasiflora-Client" 2>/dev/null
-    pkill -f "Pasiflora-UserService" 2>/dev/null
-    pkill -f "Pasiflora-DBUpdator" 2>/dev/null
   fi
   
   sleep 2
@@ -120,8 +117,10 @@ start_services() {
   
   cd "$PASIFLORA_DIR"
   
-  # Start Angular client (no exec bash - terminal closes on Ctrl+C or error)
+  # Start Angular client
+  # The PASIFLORA_SERVICE_MARKER comment allows pkill to find these bash processes
   gnome-terminal --title="Pasiflora-Client" -- bash -c "
+    : PASIFLORA_SERVICE_MARKER
     source ~/.nvm/nvm.sh
     cd $PASIFLORA_DIR/client
     echo '=== Angular Client ==='
@@ -130,6 +129,7 @@ start_services() {
   
   # Start User Service
   gnome-terminal --title="Pasiflora-UserService" -- bash -c "
+    : PASIFLORA_SERVICE_MARKER
     source ~/.nvm/nvm.sh
     cd $PASIFLORA_DIR/userService/dist
     echo '=== User Service ==='
@@ -138,6 +138,7 @@ start_services() {
   
   # Start DB Updator
   gnome-terminal --title="Pasiflora-DBUpdator" -- bash -c "
+    : PASIFLORA_SERVICE_MARKER
     source ~/.nvm/nvm.sh
     cd $PASIFLORA_DIR/dbUpdator
     echo '=== DB Updator ==='
