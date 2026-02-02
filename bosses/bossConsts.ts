@@ -31,6 +31,19 @@ export const bossImages: Record<BossTier, string> = {
     [BossTier.LEGENDARY]: 'boss-legendary.png'
 };
 
+// Get boss image filename by boss name
+export const getBossImageByName = (bossName: string | undefined): string => {
+    if (!bossName) return bossImages[BossTier.COMMON];
+    
+    // Find the tier that matches this boss name
+    for (const tier of Object.values(BossTier)) {
+        if (bossNames[tier] === bossName) {
+            return bossImages[tier];
+        }
+    }
+    return bossImages[BossTier.COMMON]; // fallback
+};
+
 // Spawn weights (higher = more common)
 export const bossSpawnWeights: Record<BossTier, number> = {
     [BossTier.COMMON]: 50,
