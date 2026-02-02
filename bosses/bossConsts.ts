@@ -36,7 +36,8 @@ export const getBossImageByName = (bossName: string | undefined): string => {
     if (!bossName) return bossImages[BossTier.COMMON];
     
     // Find the tier that matches this boss name
-    for (const tier of Object.values(BossTier)) {
+    const tiers: BossTier[] = [BossTier.COMMON, BossTier.RARE, BossTier.EPIC, BossTier.LEGENDARY];
+    for (const tier of tiers) {
         if (bossNames[tier] === bossName) {
             return bossImages[tier];
         }
