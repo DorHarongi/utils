@@ -1,4 +1,5 @@
 import { MaterialsCost } from "../../materialsCost";
+import { academyUpgradeMaterialCostByLevels } from "./academyLevelUpConsts";
 import { arsenalUpgradeMaterialCostByLevels } from "./arsenalLevelUpConsts";
 import { centerBuildingUpgradeMaterialCostByLevels } from "./centerBuildingLevelUpConsts";
 import { cropFarmUpgradeMaterialCostByLevels } from "./cropFarmLevelUpConsts";
@@ -12,6 +13,7 @@ import { woodFactoryUpgradeMaterialCostByLevels } from "./woodFactoryLevelUpCons
 import { woodWarehouseUpgradeMaterialCostByLevels } from "./woodWarehouseLevelUpConsts";
 
 export const buildingLevelUpMaterialCostsByName: {[name: string] : Array<MaterialsCost>; } = {
+    ["academy"]: academyUpgradeMaterialCostByLevels,
     ["arsenal"]: arsenalUpgradeMaterialCostByLevels,
     ["centerBuilding"]: centerBuildingUpgradeMaterialCostByLevels,
     ["cropFarm"]: cropFarmUpgradeMaterialCostByLevels,

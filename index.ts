@@ -14,12 +14,14 @@ export * from './buildings/levelUpCosts/stoneWarehouseLevelUpConsts';
 export * from './buildings/levelUpCosts/wallLevelUpConsts';
 export * from './buildings/levelUpCosts/woodFactoryLevelUpConsts';
 export * from './buildings/levelUpCosts/woodWarehouseLevelUpConsts';
+export * from './buildings/levelUpCosts/academyLevelUpConsts';
 
 export * from './buildings/embassyDefenseTroopsConsts';
 export * from './buildings/factoriesProductionSpeedConsts';
 export * from './buildings/quartersPopulationConsts';
 export * from './buildings/wallDefenseConsts';
 export * from './buildings/warehouseStorageConsts';
+export * from './buildings/academyTraitConsts';
 
 export * from './quests';
 
