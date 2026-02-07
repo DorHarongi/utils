@@ -17,9 +17,9 @@ export const axeFighterMinimumArsenalLevel: number = 2;
 export const axeFighterMaterialsCost: MaterialsCost = {wood: 750, stones: 750, crop: 1500 };
 
 export const archerAttackingStat: number = 25;
-export const archerDefenceStat: number = 2;
+export const archerDefenceStat: number = 1;
 export const archerMinimumArsenalLevel: number = 4;
-export const archerMaterialsCost: MaterialsCost = {wood: 3000, stones: 2000, crop: 3000 };
+export const archerMaterialsCost: MaterialsCost = {wood: 2000, stones: 1500, crop: 2500 };
 
 export const magicianAttackingStat: number = 20;
 export const magicianDefenceStat: number = 15;
@@ -32,7 +32,7 @@ export const horsemenMinimumArsenalLevel: number = 6;
 export const horsemenMaterialsCost: MaterialsCost = {wood: 9000, stones: 9000, crop: 9000 };
 
 export const catapultsAttackingStat: number = 200;
-export const catapultsDefenceStat: number = 1;
+export const catapultsDefenceStat: number = 5;
 export const catapultsMinimumArsenalLevel: number = 8;
 export const catapultsMaterialsCost: MaterialsCost = {wood: 25000, stones: 25000, crop: 25000 };
 
