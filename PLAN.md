@@ -718,6 +718,25 @@ Run once, in this order, before going live:
 
 ---
 
+# Risk checklist / likely bugs
+
+High risk (almost guaranteed bugs):
+- **dbUpdator aggregation pipeline**: Raw MongoDB `$switch` logic currently checks `trait`; must be rewritten to read `skills` and calculate Gold Rush / Adrenaline Surge bonuses. The aggregation pipeline syntax is fragile and hard to debug; if it breaks, resource/energy production may silently stop or miscalculate.
+- **Travel time refactor (Chunk 2)**: Attacks go from instant to delayed, rewiring the entire combat flow. The old `attack()` method does everything in one call; now it splits into "create movement" and "resolve on arrival." Edge cases to watch: defender training troops between dispatch and arrival, troop locking (troops in transit must not be usable).
+- **Return trip speed recalculation**: "Slowest troop might have died" logic. Need to recalculate army speed from survivors only after battle; easy to forget or get the troop filtering wrong.
+
+Medium risk (likely some issues):
+- **Spy state math**: `availableSpies = aliveSpies - spiesOnMission` is computed, not stored. If the cron and the API disagree on how to count "on mission" spies (from the `spyMissions` collection), numbers will drift; expect off-by-one bugs.
+- **Skill bonuses applied in wrong places**: ROADMAP has a 9-skill checklist with ~25 application sites. Expect 2–3 to be missed, especially on the client: `interval.service.ts` (Gold Rush + Adrenaline Surge ticking), resource building displays, and toolbar tooltips.
+- **Self Defense only-on-win logic**: Must check who won before applying troop loss reduction. If Self Defense is applied before determining the winner, or applied on losses too, combat balance breaks.
+- **WebSocket auth**: NestJS WebSocket gateways handle auth differently than HTTP controllers. Gateway setup might forget to validate the JWT on connection, leaving chat open to unauthenticated users.
+
+Lower risk but worth watching:
+- **Migration scripts**: `$unset` for removing `trait` is the first time this codebase deletes a field. Villages that already lack `trait` are an edge case; if not handled, migration could error out mid-run.
+- **Relic stealing condition**: "Total wipe" means all defender troops AND all support troops dead. Implementation might check only defender's own troops and forget support troops, making relics too easy to steal.
+- **Multi-server DB routing (Chunk 3)**: Dynamic `mongoose.createConnection` per server is non-standard in NestJS. Incorrect code may create a new connection on every request instead of caching, leading to MongoDB connection exhaustion.
+
+# Notes
 # Notes
 
 - All missing icons use `crop.png` as placeholder until real assets are provided

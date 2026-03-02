@@ -11,6 +11,7 @@ import { stoneWarehouseUpgradeMaterialCostByLevels } from "./stoneWarehouseLevel
 import { wallUpgradeMaterialCostByLevels } from "./wallLevelUpConsts";
 import { woodFactoryUpgradeMaterialCostByLevels } from "./woodFactoryLevelUpConsts";
 import { woodWarehouseUpgradeMaterialCostByLevels } from "./woodWarehouseLevelUpConsts";
+import { stableUpgradeMaterialCostByLevels } from "./stableLevelUpConsts";
 
 export const buildingLevelUpMaterialCostsByName: {[name: string] : Array<MaterialsCost>; } = {
     ["academy"]: academyUpgradeMaterialCostByLevels,
@@ -25,4 +26,5 @@ export const buildingLevelUpMaterialCostsByName: {[name: string] : Array<Materia
     ["wall"]: wallUpgradeMaterialCostByLevels,
     ["woodFactory"]: woodFactoryUpgradeMaterialCostByLevels,
     ["woodWarehouse"]: woodWarehouseUpgradeMaterialCostByLevels,
+    ["stable"]: stableUpgradeMaterialCostByLevels,
 };

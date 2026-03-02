@@ -4,15 +4,20 @@ export enum BossTier {
     COMMON = 'common',
     RARE = 'rare',
     EPIC = 'epic',
-    LEGENDARY = 'legendary'
+    LEGENDARY = 'legendary',
+    MYTHIC = 'mythic'
 }
+
+export type BossReportType = 'pvp' | 'boss' | 'spy';
 
 // HP ranges per tier (min, max)
 export const bossHpRanges: Record<BossTier, { min: number; max: number }> = {
     [BossTier.COMMON]: { min: 40000, max: 80000 },
     [BossTier.RARE]: { min: 200000, max: 400000 },
     [BossTier.EPIC]: { min: 800000, max: 1600000 },
-    [BossTier.LEGENDARY]: { min: 4000000, max: 8000000 }
+    [BossTier.LEGENDARY]: { min: 4000000, max: 8000000 },
+    // Mythic bosses are the true endgame raid: ~100–200x Legendary HP
+    [BossTier.MYTHIC]: { min: 800_000_000, max: 1_600_000_000 }
 };
 
 // Boss names per tier
@@ -20,7 +25,8 @@ export const bossNames: Record<BossTier, string> = {
     [BossTier.COMMON]: 'Goblin Horde',
     [BossTier.RARE]: 'Werewolf Pack',
     [BossTier.EPIC]: 'Spectral Wraith',
-    [BossTier.LEGENDARY]: 'Ancient Dragon'
+    [BossTier.LEGENDARY]: 'Ancient Dragon',
+    [BossTier.MYTHIC]: 'Mythic Titan'
 };
 
 // Boss images (matching the assets)
@@ -28,7 +34,8 @@ export const bossImages: Record<BossTier, string> = {
     [BossTier.COMMON]: 'boss-common.png',
     [BossTier.RARE]: 'boss-rare.png',
     [BossTier.EPIC]: 'boss-epic.png',
-    [BossTier.LEGENDARY]: 'boss-legendary.png'
+    [BossTier.LEGENDARY]: 'boss-legendary.png',
+    [BossTier.MYTHIC]: 'boss-mythic.png'
 };
 
 // Get boss image filename by boss name
@@ -50,7 +57,9 @@ export const bossSpawnWeights: Record<BossTier, number> = {
     [BossTier.COMMON]: 50,
     [BossTier.RARE]: 30,
     [BossTier.EPIC]: 15,
-    [BossTier.LEGENDARY]: 5
+    [BossTier.LEGENDARY]: 5,
+    // Mythic bosses are spawned via a dedicated daily roll, not the regular spawn pipeline
+    [BossTier.MYTHIC]: 0
 };
 
 // Distance bonus calculation
@@ -81,7 +90,9 @@ export const bossRewardAmounts: Record<BossTier, number> = {
     [BossTier.COMMON]: 331250,      // Level 5.5 (between 187,500 and 475,000)
     [BossTier.RARE]: 1250000,       // Level 7
     [BossTier.EPIC]: 6500000,       // Level 8.5 (between 3,000,000 and 10,000,000)
-    [BossTier.LEGENDARY]: 25000000  // Level 10
+    [BossTier.LEGENDARY]: 25000000, // Level 10
+    // Mythic rewards are enormous; exact tuning can be adjusted via playtesting
+    [BossTier.MYTHIC]: 100000000
 };
 
 // Boss max damage back per tier (flat caps, not scaling with HP)
@@ -91,7 +102,8 @@ export const bossMaxDamageBack: Record<BossTier, number> = {
     [BossTier.COMMON]: 1000,      // ~10% loss for 10k attack army
     [BossTier.RARE]: 5000,        // ~10% loss for 50k attack army
     [BossTier.EPIC]: 15000,       // ~10% loss for 150k attack army
-    [BossTier.LEGENDARY]: 50000   // ~10% loss for 500k attack army, requires clan for profit
+    [BossTier.LEGENDARY]: 50000,  // ~10% loss for 500k attack army, requires clan for profit
+    [BossTier.MYTHIC]: 200000     // Endgame raids with very high but still capped losses
 };
 
 // Boss claim duration (48 hours in milliseconds)
@@ -111,7 +123,8 @@ export const bossMinimapColors: Record<BossTier, string> = {
     [BossTier.COMMON]: '#808080',      // Gray
     [BossTier.RARE]: '#3498db',        // Blue
     [BossTier.EPIC]: '#9b59b6',        // Purple
-    [BossTier.LEGENDARY]: '#f1c40f'    // Gold
+    [BossTier.LEGENDARY]: '#f1c40f',   // Gold
+    [BossTier.MYTHIC]: '#e74c3c'       // Red-gold highlight for Mythic
 };
 
 // Claimed boss indicator color (orange - distinct from green villages)
