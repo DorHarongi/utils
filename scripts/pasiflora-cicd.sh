@@ -6,6 +6,7 @@
 
 PASIFLORA_DIR=~/Desktop/pasiflora
 LOCKFILE="/tmp/pasiflora-cicd.lock"
+LOG_DIR="$PASIFLORA_DIR/.cicd-logs"
 
 # ============================================
 # Prevent multiple instances (EARLY + ATOMIC)
@@ -60,12 +61,6 @@ stop_services() {
   pkill -9 -f "node db-updator.js" 2>/dev/null
   pkill -9 -f "PASIFLORA_SVC" 2>/dev/null
 
-  if command -v wmctrl &>/dev/null; then
-    wmctrl -c "Pasiflora-Client" 2>/dev/null
-    wmctrl -c "Pasiflora-UserService" 2>/dev/null
-    wmctrl -c "Pasiflora-DBUpdator" 2>/dev/null
-  fi
-
   sleep 2
   log "Services stopped."
 }
@@ -101,32 +96,31 @@ build_projects() {
 start_services() {
   log "Starting services..."
 
-  gnome-terminal --title="Pasiflora-Client" -- bash -c "
+  mkdir -p "$LOG_DIR"
+
+  (
     export PASIFLORA_SVC=client
-    source ~/.nvm/nvm.sh
-    cd $PASIFLORA_DIR/client
-    ng serve --configuration=production --host 0.0.0.0 --port 80 --disable-host-check
-  "
+    source ~/.nvm/nvm.sh 2>/dev/null
+    cd "$PASIFLORA_DIR/client" && ng serve --configuration=production --host 0.0.0.0 --port 80 --disable-host-check
+  ) >> "$LOG_DIR/client.log" 2>&1 &
 
   sleep 1
 
-  gnome-terminal --title="Pasiflora-UserService" -- bash -c "
+  (
     export PASIFLORA_SVC=userservice
-    source ~/.nvm/nvm.sh
-    cd $PASIFLORA_DIR/userService/dist
-    node main.js
-  "
+    source ~/.nvm/nvm.sh 2>/dev/null
+    cd "$PASIFLORA_DIR/userService/dist" && node main.js
+  ) >> "$LOG_DIR/userService.log" 2>&1 &
 
   sleep 1
 
-  gnome-terminal --title="Pasiflora-DBUpdator" -- bash -c "
+  (
     export PASIFLORA_SVC=dbupdator
-    source ~/.nvm/nvm.sh
-    cd $PASIFLORA_DIR/dbUpdator
-    node db-updator.js
-  "
+    source ~/.nvm/nvm.sh 2>/dev/null
+    cd "$PASIFLORA_DIR/dbUpdator" && node db-updator.js
+  ) >> "$LOG_DIR/dbUpdator.log" 2>&1 &
 
-  log "Services started."
+  log "Services started (logs in $LOG_DIR/)."
 }
 
 deploy() {
