@@ -112,6 +112,9 @@ export const BOSS_CLAIM_DURATION_MS = 48 * 60 * 60 * 1000;
 // Boss despawn duration for unclaimed bosses (48 hours)
 export const BOSS_UNCLAIMED_DESPAWN_MS = 48 * 60 * 60 * 1000;
 
+// Mythic boss despawn duration (1 week)
+export const MYTHIC_BOSS_DESPAWN_MS = 7 * 24 * 60 * 60 * 1000;
+
 // Maximum bosses on map at once
 export const MAX_BOSSES_ON_MAP = 10;
 

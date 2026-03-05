@@ -32,8 +32,8 @@ export const RELIC_NAMES: RelicDefinition[] = [
     }
 ];
 
-// 1% daily chance to spawn a Mythic boss per server
-export const MYTHIC_BOSS_DAILY_SPAWN_CHANCE = 0.01;
+// 5% daily chance to spawn a Mythic boss per server
+export const MYTHIC_BOSS_DAILY_SPAWN_CHANCE = 0.05;
 
 // 7-day cooldown between leader-initiated relic transfers
 export const RELIC_TRANSFER_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
