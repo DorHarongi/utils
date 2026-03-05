@@ -18,7 +18,7 @@ export interface TroopsAmountsLike {
     catapults: number;
 }
 
-export const MERCHANT_SPEED = 5;
+export const MERCHANT_SPEED = 1;
 
 export const calculateDistance = (x1: number, y1: number, x2: number, y2: number): number => {
     const dx = x2 - x1;
