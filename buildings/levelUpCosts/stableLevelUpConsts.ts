@@ -1,18 +1,17 @@
 import { MaterialsCost } from "../../materialsCost";
 
+// Stable: wood (structure), crop (horses), less stone. Totals match quarters/arsenal.
 const stableLevel0MaterialsCost: MaterialsCost = { wood: 0, crop: 0, stones: 0 };
 const stableLevel1MaterialsCost: MaterialsCost = { wood: 0, crop: 0, stones: 0 };
-
-// Primarily wood, medium stone, low crop (totals mirror Arsenal pattern)
-const stableLevel2MaterialsCost: MaterialsCost = { wood: 3750, crop: 1500, stones: 2250 };
-const stableLevel3MaterialsCost: MaterialsCost = { wood: 9375, crop: 3750, stones: 5625 };
-const stableLevel4MaterialsCost: MaterialsCost = { wood: 22500, crop: 9000, stones: 13500 };
-const stableLevel5MaterialsCost: MaterialsCost = { wood: 56250, crop: 22500, stones: 33750 };
-const stableLevel6MaterialsCost: MaterialsCost = { wood: 140625, crop: 56250, stones: 84375 };
-const stableLevel7MaterialsCost: MaterialsCost = { wood: 356250, crop: 142500, stones: 213750 };
-const stableLevel8MaterialsCost: MaterialsCost = { wood: 937500, crop: 375000, stones: 562500 };
-const stableLevel9MaterialsCost: MaterialsCost = { wood: 2250000, crop: 900000, stones: 1350000 };
-const stableLevel10MaterialsCost: MaterialsCost = { wood: 7500000, crop: 3000000, stones: 4500000 };
+const stableLevel2MaterialsCost: MaterialsCost = { wood: 3000, crop: 2600, stones: 1900 };
+const stableLevel3MaterialsCost: MaterialsCost = { wood: 7500, crop: 6600, stones: 4650 };
+const stableLevel4MaterialsCost: MaterialsCost = { wood: 18000, crop: 16000, stones: 11000 };
+const stableLevel5MaterialsCost: MaterialsCost = { wood: 45000, crop: 39500, stones: 28000 };
+const stableLevel6MaterialsCost: MaterialsCost = { wood: 112500, crop: 98500, stones: 70250 };
+const stableLevel7MaterialsCost: MaterialsCost = { wood: 285000, crop: 249500, stones: 178000 };
+const stableLevel8MaterialsCost: MaterialsCost = { wood: 750000, crop: 656000, stones: 469000 };
+const stableLevel9MaterialsCost: MaterialsCost = { wood: 1800000, crop: 1575000, stones: 1125000 };
+const stableLevel10MaterialsCost: MaterialsCost = { wood: 6000000, crop: 5250000, stones: 3750000 };
 
 export const stableUpgradeMaterialCostByLevels: Array<MaterialsCost> = [
     stableLevel0MaterialsCost,
@@ -27,4 +26,3 @@ export const stableUpgradeMaterialCostByLevels: Array<MaterialsCost> = [
     stableLevel9MaterialsCost,
     stableLevel10MaterialsCost,
 ];
-

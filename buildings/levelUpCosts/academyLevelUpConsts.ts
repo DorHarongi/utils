@@ -1,17 +1,17 @@
 import { MaterialsCost } from "../../materialsCost";
 
-// Academy costs: primarily stone, similar wood, less crop
-const academyLevel0MaterialsCost: MaterialsCost = {wood: 0, crop: 0, stones: 0};
-const academyLevel1MaterialsCost: MaterialsCost = {wood: 0, crop: 0, stones: 0};
-const academyLevel2MaterialsCost: MaterialsCost = {wood: 1500, crop: 800, stones: 2000};
-const academyLevel3MaterialsCost: MaterialsCost = {wood: 4000, crop: 2000, stones: 5000}; // Level 3 unlocks trait selection
-const academyLevel4MaterialsCost: MaterialsCost = {wood: 10000, crop: 5000, stones: 12500};
-const academyLevel5MaterialsCost: MaterialsCost = {wood: 25000, crop: 12500, stones: 31250};
-const academyLevel6MaterialsCost: MaterialsCost = {wood: 62500, crop: 31250, stones: 78125};
-const academyLevel7MaterialsCost: MaterialsCost = {wood: 156250, crop: 78125, stones: 195312};
-const academyLevel8MaterialsCost: MaterialsCost = {wood: 390625, crop: 195312, stones: 488281};
-const academyLevel9MaterialsCost: MaterialsCost = {wood: 976562, crop: 488281, stones: 1220703};
-const academyLevel10MaterialsCost: MaterialsCost = {wood: 2441406, crop: 1220703, stones: 3051757};
+// Academy: mainly wood and stone (building materials), less crop. Totals match quarters/arsenal.
+const academyLevel0MaterialsCost: MaterialsCost = { wood: 0, crop: 0, stones: 0 };
+const academyLevel1MaterialsCost: MaterialsCost = { wood: 0, crop: 0, stones: 0 };
+const academyLevel2MaterialsCost: MaterialsCost = { wood: 3400, crop: 1100, stones: 3000 };
+const academyLevel3MaterialsCost: MaterialsCost = { wood: 8400, crop: 2850, stones: 7500 };
+const academyLevel4MaterialsCost: MaterialsCost = { wood: 20000, crop: 7000, stones: 18000 };
+const academyLevel5MaterialsCost: MaterialsCost = { wood: 50000, crop: 17500, stones: 45000 };
+const academyLevel6MaterialsCost: MaterialsCost = { wood: 126500, crop: 42250, stones: 112500 };
+const academyLevel7MaterialsCost: MaterialsCost = { wood: 320000, crop: 107500, stones: 285000 };
+const academyLevel8MaterialsCost: MaterialsCost = { wood: 844000, crop: 281000, stones: 750000 };
+const academyLevel9MaterialsCost: MaterialsCost = { wood: 2025000, crop: 675000, stones: 1800000 };
+const academyLevel10MaterialsCost: MaterialsCost = { wood: 6750000, crop: 2250000, stones: 6000000 };
 
 export const academyUpgradeMaterialCostByLevels: Array<MaterialsCost> = [
     academyLevel0MaterialsCost,
