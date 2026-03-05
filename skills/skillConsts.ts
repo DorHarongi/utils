@@ -67,12 +67,23 @@ export const getSkillPointsByAcademyLevel = (level: number): number => {
     return level * 2;
 };
 
+/** Cumulative cost to reach a tier (I=1, II=1+2=3, III=1+2+3=6) */
+export const getCumulativeCostForTier = (tier: SkillTier): number => {
+    const tierOrder: SkillTier[] = [SkillTier.I, SkillTier.II, SkillTier.III];
+    const idx = tierOrder.indexOf(tier);
+    let sum = 0;
+    for (let i = 0; i <= idx; i++) {
+        sum += SKILL_TIER_COSTS[tierOrder[i]];
+    }
+    return sum;
+};
+
 export const getUsedSkillPoints = (skills: Skills): number => {
     let sum = 0;
     for (const key in skills) {
         const tier = skills[key as keyof Skills];
         if (tier) {
-            sum += SKILL_TIER_COSTS[tier];
+            sum += getCumulativeCostForTier(tier);
         }
     }
     return sum;
@@ -139,7 +150,7 @@ export const SKILL_METADATA: SkillMetadata[] = [
     {
         category: SkillCategory.HEROIC_SHIELD,
         name: 'Heroic Shield',
-        description: 'Increases your village\'s total defense when defending.',
+        description: 'Increases your village\'s total defense when being attacked by another player.',
         icon: 'crop.png',
         tierBonuses: SKILL_TIER_BONUSES[SkillCategory.HEROIC_SHIELD],
     },

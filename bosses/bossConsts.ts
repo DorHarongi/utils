@@ -35,7 +35,7 @@ export const bossImages: Record<BossTier, string> = {
     [BossTier.RARE]: 'boss-rare.png',
     [BossTier.EPIC]: 'boss-epic.png',
     [BossTier.LEGENDARY]: 'boss-legendary.png',
-    [BossTier.MYTHIC]: 'boss-mythic.png'
+    [BossTier.MYTHIC]: 'mythic-boss.png'
 };
 
 // Get boss image filename by boss name
@@ -43,7 +43,7 @@ export const getBossImageByName = (bossName: string | undefined): string => {
     if (!bossName) return bossImages[BossTier.COMMON];
     
     // Find the tier that matches this boss name
-    const tiers: BossTier[] = [BossTier.COMMON, BossTier.RARE, BossTier.EPIC, BossTier.LEGENDARY];
+    const tiers: BossTier[] = [BossTier.COMMON, BossTier.RARE, BossTier.EPIC, BossTier.LEGENDARY, BossTier.MYTHIC];
     for (const tier of tiers) {
         if (bossNames[tier] === bossName) {
             return bossImages[tier];

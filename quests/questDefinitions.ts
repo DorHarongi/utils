@@ -176,6 +176,30 @@ export const QUESTS: Quest[] = [
         }
     },
     {
+        id: 16,
+        title: "Upgrade the Stable",
+        description: "Upgrade your Stable to level 2. The Stable unlocks spies that can scout enemy villages and gather valuable information.",
+        hint: "Click the Stable building and upgrade it to level 2",
+        rewards: { wood: 4000, stone: 4000, crop: 2000 },
+        condition: {
+            type: QuestCompletionType.BUILDING_LEVEL,
+            buildingName: 'stable',
+            level: 2,
+        }
+    },
+    {
+        id: 17,
+        title: "Unlock the Academy",
+        description: "Upgrade your Academy to level 2. The Academy grants Skill Points you can invest in powerful bonuses for your village and army.",
+        hint: "Click the Academy building and upgrade it to level 2",
+        rewards: { wood: 5000, stone: 5000, crop: 5000 },
+        condition: {
+            type: QuestCompletionType.BUILDING_LEVEL,
+            buildingName: 'academy',
+            level: 2,
+        }
+    },
+    {
         id: 15,
         title: "Join the Community",
         description: "Join or create a clan! Team up with other players for raids, support, and glory! You'll need to upgrade your Embassy to level 3 first.",

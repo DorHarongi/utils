@@ -25,7 +25,6 @@ export * from './buildings/factoriesProductionSpeedConsts';
 export * from './buildings/quartersPopulationConsts';
 export * from './buildings/wallDefenseConsts';
 export * from './buildings/warehouseStorageConsts';
-export * from './buildings/academyTraitConsts';
 export * from './buildings/stableConsts';
 
 export * from './quests';
