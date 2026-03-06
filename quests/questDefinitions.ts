@@ -166,7 +166,7 @@ export const QUESTS: Quest[] = [
     {
         id: 14,
         title: "Build Your Defenses",
-        description: "Upgrade your Wall to level 2. Walls add defense bonus to your village, making it harder to attack!",
+        description: "Upgrade your Wall to level 2. Walls add defense bonus to your village and increase spy detection chance!",
         hint: "Click the Wall building",
         rewards: { wood: 6750, stone: 8500, crop: 1700 },
         condition: { 
