@@ -21,7 +21,7 @@ export const archerDefenceStat: number = 15;
 export const archerMinimumArsenalLevel: number = 4;
 export const archerMaterialsCost: MaterialsCost = { wood: 1500, stones: 1500, crop: 2000 };
 
-export const magicianAttackingStat: number = 20;
+export const magicianAttackingStat: number = 25;
 export const magicianDefenceStat: number = 40;
 export const magicianMinimumArsenalLevel: number = 5;
 export const magicianMaterialsCost: MaterialsCost = { wood: 3500, stones: 3500, crop: 5000 };
