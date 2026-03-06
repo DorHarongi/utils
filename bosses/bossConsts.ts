@@ -27,7 +27,7 @@ export const bossNames: Record<BossTier, string> = {
   [BossTier.RARE]: "Werewolf Pack",
   [BossTier.EPIC]: "Spectral Wraith",
   [BossTier.LEGENDARY]: "Ancient Dragon",
-  [BossTier.MYTHIC]: "Mythic Titan",
+  [BossTier.MYTHIC]: "Ancient Titan",
 };
 
 // Boss images (matching the assets)

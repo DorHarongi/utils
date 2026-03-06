@@ -32,3 +32,4 @@ export * from './quests';
 export * from './bosses/bossConsts';
 export * from './achievements/achievementConsts';
 export * from './relics/relicConsts';
+export * from './clans/clanConsts';
