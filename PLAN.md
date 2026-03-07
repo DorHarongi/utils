@@ -486,7 +486,7 @@ This chunk adds the endgame win condition, the entire multi-server system, and p
 
 **File:** `utils/relics/relicConsts.ts` (new)
 
-- `RELIC_NAMES`: 5 objects with `id`, `name`, `description` (Apple of Eternity, Eternal Flame, Chalice of Ascension, All-Seeing Orb, Sigil of Creation)
+- `RELIC_NAMES`: 5 objects with `id`, `name`, `description` (Apple of Immortality, Eternal Flame, Chalice of Ascension, All-Seeing Orb, Sigil of Creation)
 - `MYTHIC_BOSS_DAILY_SPAWN_CHANCE = 0.01`
 - `RELIC_TRANSFER_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000`
 - `RelicHolder` interface: `{ relicId, username, villageName, clanName, transferCooldownUntil }`

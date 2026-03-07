@@ -1170,7 +1170,7 @@ Each relic is a **godly object of power** with its own unique name, identity, an
 
 | Relic | Godly Feeling / Inspiration |
 |-------|-----------------------------|
-| 🍎 **The Apple of Eternity** | Forbidden knowledge, immortality — Eden / Garden of Hesperides |
+| 🍎 **The Apple of Immortality** | Forbidden knowledge, immortality — Eden / Garden of Hesperides |
 | 🔥 **The Eternal Flame** | Divine fire stolen from the gods — Prometheus |
 | ⚗️ **The Chalice of Ascension** | Holy Grail energy — whoever possesses it is destined to rule |
 | 👁️ **The All-Seeing Orb** | Divine omniscience — the gods watched the world through this |

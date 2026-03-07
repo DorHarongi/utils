@@ -6,8 +6,8 @@ export interface RelicDefinition {
 
 export const RELIC_NAMES: RelicDefinition[] = [
   {
-    id: "apple_of_eternity",
-    name: "Apple of Eternity",
+    id: "apple_of_immortality",
+    name: "Apple of Immortality",
     description: "Forbidden knowledge and immortality, the fruit of the gods.",
   },
   {
