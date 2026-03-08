@@ -26,7 +26,7 @@ export const bossNames: Record<BossTier, string> = {
   [BossTier.COMMON]: "Goblin Horde",
   [BossTier.RARE]: "Werewolf Pack",
   [BossTier.EPIC]: "Spectral Wraith",
-  [BossTier.LEGENDARY]: "Ancient Dragon",
+  [BossTier.LEGENDARY]: "Sun Dragon",
   [BossTier.MYTHIC]: "Ancient Titan",
 };
 
