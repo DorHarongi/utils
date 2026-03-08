@@ -252,7 +252,7 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 - If successfully embedded, the Expert Spy monitors the oasis for hours and reports:
   - When someone arrives to garrison or attack
   - When someone retreats with their stash
-  - Troop counts of anyone coming or going (approximate, ±15-25%)
+  - Troop counts of anyone coming or going
   - When the oasis is drained and despawns
 - This turns oasis surveillance into a clan intelligence tool: "Park our Expert Spy on that rich oasis near the enemy clan's territory. We'll know the moment they show up."
 
@@ -337,31 +337,25 @@ Every **30 minutes** while embedded, the Expert Spy generates an intel report:
 
 | Activity Detected | Report Example |
 |-------------------|----------------|
-| Player sends support troops | "Target sent ~300 troops as support to [village coordinates]" |
+| Player sends support troops | "Target sent 300 troops as support to [village coordinates]" |
 | Player receives support troops | "Target received support troops from [player name]" |
-| Player sends PvP attack | "Target sent troops to attack [village coordinates] (~500 troops)" |
+| Player sends PvP attack | "Target sent troops to attack [village coordinates] (500 troops)" |
 | Player sends PvE attack | "Target sent troops to attack a boss at [coordinates]" |
-| Player's troops return from PvP | "Target's troops returned from PvP — estimated ~200 survivors" |
-| Player's troops return from PvE | "Target's troops returned from boss raid — estimated ~450 survivors" |
+| Player's troops return from PvP | "Target's troops returned from PvP — 200 survivors" |
+| Player's troops return from PvE | "Target's troops returned from boss raid — 450 survivors" |
 | No activity | "No troop movement detected this period" |
 
 **On oases:**
 
 | Activity Detected | Report Example |
 |-------------------|----------------|
-| Someone arrives to garrison | "~400 troops arrived at the oasis from [player name]" |
-| Someone attacks the oasis | "~600 troops attacked the oasis — combat occurred" |
+| Someone arrives to garrison | "400 troops arrived at the oasis from [player name]" |
+| Someone attacks the oasis | "600 troops attacked the oasis — combat occurred" |
 | Someone retreats with stash | "[Player name] retreated from the oasis with their stash" |
 | Oasis drained | "The oasis has been fully drained and will despawn" |
 | No activity | "No activity at this oasis" |
 
-**⚠️ IMPORTANT — Expert Spy reports are APPROXIMATE. Regular spy reports are EXACT.**
-
-This is the key difference between the two spy types:
-- **Regular spy** = one-time snapshot, exact numbers. "200 Archers, 50 Horsemen." Precise. No guessing.
-- **Expert Spy** = ongoing surveillance of *movement*, approximate numbers. "Target sent ~400 troops" could mean 340-460. The Expert Spy is watching troops march past from a hiding spot, not doing a full headcount like a regular spy.
-
-Expert Spy troop estimates have ±15-25% variance. This is intentional — it gives useful strategic intel ("they just sent a big army east") without replacing the regular spy's exact reconnaissance. You still need regular spies for precise troop counts before committing to an attack.
+**Regular spy** = one-time snapshot, exact numbers. **Expert Spy** = ongoing surveillance of movement, also exact numbers. The difference is duration and persistence, not accuracy.
 
 ---
 
