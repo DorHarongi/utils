@@ -304,6 +304,7 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 - [ ] Client: "Your Oases" section in main panel or movements panel (shows all active garrisons)
 - [ ] Client: Retreat button with travel time + confirmation
 - [ ] Client: Spy report for oasis (show occupancy, troops, stash)
+- [ ] Utils: Update Filthy Thief skill description to include oasis bonuses (currently says "PvP attacks" only)
 
 ---
 
