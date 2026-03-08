@@ -267,7 +267,7 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 | Sharper Blades | Stronger when attacking oasis garrisons |
 | Heroic Shield | Stronger garrison defense |
 | Self Defense | Fewer losses in oasis combat (on wins) |
-| Filthy Thief | +% on stolen stash when attacking occupied oasis |
+| Filthy Thief | +% on stolen stash when attacking occupied oasis, +% on oasis harvest rate |
 | Iron Vault | -% lost from your stash when your garrison is defeated |
 
 ---
@@ -321,6 +321,7 @@ Unlike regular spies (one-time snapshot), the Expert Spy is a **persistent surve
 **Core Design:**
 
 - **One Expert Spy per village** (each village can train and deploy its own)
+- **Separate pool from regular spies** — Expert Spy has its own slot, regen timer, and cooldown, completely independent of the regular spy pool. This avoids sync bugs between the two systems.
 - Unlocked at Stable level 5 (mid-game building investment required)
 - The Expert Spy is visually and mechanically distinct from regular spies — it's a special unit
 - When deployed, it embeds at the target for a **configurable duration** (default: 6 hours)
