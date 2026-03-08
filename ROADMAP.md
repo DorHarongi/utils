@@ -267,7 +267,7 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 | Sharper Blades | Stronger when attacking oasis garrisons |
 | Heroic Shield | Stronger garrison defense |
 | Self Defense | Fewer losses in oasis combat (on wins) |
-| Filthy Thief | +% on stolen stash when attacking occupied oasis, +% on oasis harvest rate |
+| Filthy Thief | +% on stolen stash when attacking occupied oasis, +% on oasis harvest rate. Skill description should be updated to reflect oasis bonuses (currently says "PvP attacks" only) |
 | Iron Vault | -% lost from your stash when your garrison is defeated |
 
 ---
@@ -304,8 +304,6 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 - [ ] Client: "Your Oases" section in main panel or movements panel (shows all active garrisons)
 - [ ] Client: Retreat button with travel time + confirmation
 - [ ] Client: Spy report for oasis (show occupancy, troops, stash)
-- [ ] Utils: Update Filthy Thief skill description to include oasis bonuses (currently says "PvP attacks" only)
-
 ---
 
 ### 2. Expert Spy (Enhancement to Scouting System)
