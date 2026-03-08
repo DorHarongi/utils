@@ -238,8 +238,9 @@ Occupied oasis detection:
 
 **Spy report on oasis (success) reveals:**
 - Whether it's occupied or empty
-- If occupied: who controls it, how many troops they have (exact count), how much they've accumulated in their stash
+- If occupied: who controls it, exact troop counts by type (e.g., "200 Archers, 50 Horsemen"), exact stash amounts
 - Remaining resources in the oasis (what's left to harvest)
+- **Multi-village limitation:** If the occupier sent troops from multiple villages, the spy sees the combined total — NOT which village each troop came from. "Player X: 200 Archers, 50 Horsemen" — the spy can't tell if 100 Archers came from village A and 100 from village B.
 
 ---
 
@@ -311,7 +312,7 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 **Complexity:** Medium
 
 **Description:**  
-A special elite spy unit — one per clan — that can embed inside an enemy village **or an oasis** for hours and provide ongoing intelligence reports.
+A special elite spy unit — one per village — that can embed inside an enemy village **or an oasis** for hours and provide ongoing intelligence reports.
 
 Unlike regular spies (one-time snapshot), the Expert Spy is a **persistent surveillance agent**. It stays inside the target and reports on troop movements in real-time.
 
@@ -319,7 +320,7 @@ Unlike regular spies (one-time snapshot), the Expert Spy is a **persistent surve
 
 **Core Design:**
 
-- **One Expert Spy per clan** (NOT per village — the entire clan shares one)
+- **One Expert Spy per village** (each village can train and deploy its own)
 - Unlocked at Stable level 5 (mid-game building investment required)
 - The Expert Spy is visually and mechanically distinct from regular spies — it's a special unit
 - When deployed, it embeds at the target for a **configurable duration** (default: 6 hours)
@@ -354,7 +355,13 @@ Every **30 minutes** while embedded, the Expert Spy generates an intel report:
 | Oasis drained | "The oasis has been fully drained and will despawn" |
 | No activity | "No activity at this oasis" |
 
-**Troop count estimates are approximate** (±15-25%) — the Expert Spy observes from hiding, not counting precisely. This prevents exact intel while still being strategically valuable.
+**⚠️ IMPORTANT — Expert Spy reports are APPROXIMATE. Regular spy reports are EXACT.**
+
+This is the key difference between the two spy types:
+- **Regular spy** = one-time snapshot, exact numbers. "200 Archers, 50 Horsemen." Precise. No guessing.
+- **Expert Spy** = ongoing surveillance of *movement*, approximate numbers. "Target sent ~400 troops" could mean 340-460. The Expert Spy is watching troops march past from a hiding spot, not doing a full headcount like a regular spy.
+
+Expert Spy troop estimates have ±15-25% variance. This is intentional — it gives useful strategic intel ("they just sent a big army east") without replacing the regular spy's exact reconnaissance. You still need regular spies for precise troop counts before committing to an attack.
 
 ---
 
@@ -404,12 +411,12 @@ The Expert Spy can be deployed to:
 
 **Implementation:**
 - [ ] Utils: Expert spy constants (embed duration, report interval, cooldown, troop estimate variance)
-- [ ] Server: Expert spy state tracking (per clan, not per village)
+- [ ] Server: Expert spy state tracking (per village)
 - [ ] Server: Deploy endpoint — validate clan has expert spy available, calculate arrival, detection roll on arrival
 - [ ] Server: Embed cron — every 30 min, generate intel reports for all active expert spy deployments
 - [ ] Server: Monitor target's movement events and create report entries
 - [ ] Server: Auto-return after embed duration expires
-- [ ] Server: 24h cooldown on death (tracked per clan)
+- [ ] Server: 24h cooldown on death (tracked per village)
 - [ ] Client: Expert Spy section in Stable UI
 - [ ] Client: "Deploy Expert Spy" button on village interaction (disabled if unavailable)
 - [ ] Client: Expert Spy reports in inbox (special styling, grouped per mission)
