@@ -314,7 +314,7 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 **Description:**  
 A special elite spy unit — one per village — that can embed inside an enemy village **or an oasis** for hours and provide ongoing intelligence reports.
 
-Unlike regular spies (one-time snapshot), the Expert Spy is a **persistent surveillance agent**. It stays inside the target and reports on troop movements in real-time.
+Unlike regular spies (one-time snapshot), the Expert Spy is a **persistent surveillance agent**. It stays inside the target and sends intelligence home via crow messengers whenever events happen — no polling, no fixed intervals.
 
 ---
 
@@ -324,38 +324,48 @@ Unlike regular spies (one-time snapshot), the Expert Spy is a **persistent surve
 - Unlocked at Stable level 5 (mid-game building investment required)
 - The Expert Spy is visually and mechanically distinct from regular spies — it's a special unit
 - When deployed, it embeds at the target for a **configurable duration** (default: 6 hours)
-- During the embed period, the Expert Spy sends periodic intelligence reports to your inbox
+- The Expert Spy is **event-driven**: whenever a relevant event occurs at the target (troops departing, arriving, support withdrawn, etc.), the spy dispatches a crow carrying the intelligence back to your village
 - After the duration expires, the Expert Spy returns home automatically
 
 ---
 
-**What the Expert Spy Reports:**
+**Crow Messenger System:**
 
-Every **30 minutes** while embedded, the Expert Spy generates an intel report:
+When the Expert Spy observes an event, it sends a **crow** back to the village that deployed it:
+- Crow travel speed: **20 tiles per minute** (fast but not instant — distance matters)
+- The crow appears in your **movements panel** with a dedicated crow icon, flying toward your village
+- Once the crow arrives, you receive the intelligence report in your inbox
+- The crow is one-way — it does not return to the Expert Spy
+- Multiple events = multiple crows in flight (you might see several crows incoming if a lot is happening at the target)
+
+This means intelligence is not instant. If your Expert Spy is embedded 40 tiles away, each report takes 2 minutes to reach you. If the target is nearby (5 tiles), you get near-real-time intel. **Distance to target directly affects how fresh your intelligence is.**
+
+---
+
+**What Triggers a Crow:**
 
 **On enemy villages:**
 
-| Activity Detected | Report Example |
-|-------------------|----------------|
-| Player sends support troops | "Target sent 300 troops as support to [village coordinates]" |
-| Player receives support troops | "Target received support troops from [player name]" |
-| Player sends PvP attack | "Target sent troops to attack [village coordinates] (500 troops)" |
-| Player sends PvE attack | "Target sent troops to attack a boss at [coordinates]" |
-| Player's troops return from PvP | "Target's troops returned from PvP — 200 survivors" |
-| Player's troops return from PvE | "Target's troops returned from boss raid — 450 survivors" |
-| No activity | "No troop movement detected this period" |
+| Event | Report Content |
+|-------|---------------|
+| Troops depart for attack | "Target sent troops to attack [village coordinates] (500 troops)" |
+| Troops depart for boss | "Target sent troops to attack a boss at [coordinates]" |
+| Troops depart as support | "Target sent 300 troops as support to [village coordinates]" |
+| Support troops received | "Target received support troops from [player name]" |
+| Support troops withdrawn | "Support troops from [player name] have left the target" |
+| Troops return from PvP | "Target's troops returned from PvP — 200 survivors" |
+| Troops return from PvE | "Target's troops returned from boss raid — 450 survivors" |
 
 **On oases:**
 
-| Activity Detected | Report Example |
-|-------------------|----------------|
+| Event | Report Content |
+|-------|---------------|
 | Someone arrives to garrison | "400 troops arrived at the oasis from [player name]" |
 | Someone attacks the oasis | "600 troops attacked the oasis — combat occurred" |
 | Someone retreats with stash | "[Player name] retreated from the oasis with their stash" |
 | Oasis drained | "The oasis has been fully drained and will despawn" |
-| No activity | "No activity at this oasis" |
 
-**Regular spy** = one-time snapshot, exact numbers. **Expert Spy** = ongoing surveillance of movement, also exact numbers. The difference is duration and persistence, not accuracy.
+**Regular spy** = one-time snapshot, exact numbers. **Expert Spy** = ongoing event-driven surveillance, also exact numbers. The difference is duration and persistence, not accuracy.
 
 ---
 
@@ -398,21 +408,24 @@ The Expert Spy can be deployed to:
 
 - In the Stable building page: "Expert Spy" section (visible at Stable 5+) showing status: Available / Deployed / Dead (cooldown timer)
 - On map: village interaction for enemies has a third spy option: "Deploy Expert Spy" alongside the regular "Scout" button
-- Confirmation modal: "Deploy Expert Spy on [village name]? Duration: 6 hours. Reports every 30 min. If caught, 24h cooldown."
+- Confirmation modal: "Deploy Expert Spy on [village name]? Duration: 6 hours. If caught, 24h cooldown."
+- Movements panel: incoming crow icon with travel progress (same as troop movements)
 - Inbox: Expert Spy reports appear as a special report type with their own icon, grouped by deployment mission
 
 ---
 
 **Implementation:**
-- [ ] Utils: Expert spy constants (embed duration, report interval, cooldown, troop estimate variance)
+- [ ] Utils: Expert spy constants (embed duration, crow speed 20 tiles/min, cooldown)
 - [ ] Server: Expert spy state tracking (per village)
-- [ ] Server: Deploy endpoint — validate clan has expert spy available, calculate arrival, detection roll on arrival
-- [ ] Server: Embed cron — every 30 min, generate intel reports for all active expert spy deployments
-- [ ] Server: Monitor target's movement events and create report entries
+- [ ] Server: Deploy endpoint — validate expert spy available, calculate arrival, detection roll on arrival
+- [ ] Server: Hook into movement/combat events — when a relevant event occurs at a surveilled target, create a crow movement
+- [ ] Server: Crow movement type — one-way movement from target to deployer's village, carries intel payload
+- [ ] Server: On crow arrival — deliver intelligence report to deployer's inbox
 - [ ] Server: Auto-return after embed duration expires
 - [ ] Server: 24h cooldown on death (tracked per village)
 - [ ] Client: Expert Spy section in Stable UI
 - [ ] Client: "Deploy Expert Spy" button on village interaction (disabled if unavailable)
+- [ ] Client: Crow icon in movements panel (incoming crow with travel time)
 - [ ] Client: Expert Spy reports in inbox (special styling, grouped per mission)
 - [ ] Client: Expert Spy status indicator (in Stable page or top toolbar)
 
