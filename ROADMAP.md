@@ -192,6 +192,8 @@ Click your occupied oasis on the map to see a real-time dashboard:
 
 **You do NOT see:** the original total, who was here before you, or how much was already taken.
 
+**✅ DECIDED: Minimap icon is 🏝️ emoji** (same pattern as bosses using 💀). No custom asset needed — emoji renders at minimap scale. Legend entry: `🏝️ Oasis`.
+
 **UI — Oasis on map (for non-occupiers):**
 
 Click an oasis you don't control → minimal panel with maximum uncertainty:
@@ -631,12 +633,68 @@ This feature is interesting but adds balancing complexity. It's documented here 
 
 ---
 
+### 6. New Achievements & Titles
+**Priority:** Medium  
+**Complexity:** Low
+
+**Description:**  
+Expand the current achievement system (12 achievements across 4 lines) with 9 new achievement lines covering more game systems. Each line has 3 tiers (I, II, III) with progressively higher thresholds. Unlocking an achievement grants it as a selectable title.
+
+---
+
+**New Achievement Lines:**
+
+| Line | Title | Description | Tier I | Tier II | Tier III | Stat Tracked |
+|------|-------|-------------|--------|---------|----------|--------------|
+| 1 | **Shadow Agent** | Successful spy missions | 10 | 50 | 250 | `totalStats.successfulSpies` |
+| 2 | **Empire Builder** | Villages owned | 2 | 4 | 7 | `villages.length` (computed) |
+| 3 | **Relic Hunter** | Relics stolen via PvP | 1 | 5 | 15 | `totalStats.relicsStolen` |
+| 4 | **Generous Ally** | Total resources sent to clanmates | 500k | 5M | 50M | `totalStats.resourcesSentToClan` |
+| 5 | **Titan Slayer** | Damage dealt to Mythic bosses | 1M | 25M | 100M | `totalStats.mythicBossDamage` |
+| 6 | **Shield Brother** | Support troops sent to allies | 500 | 5,000 | 25,000 | `totalStats.supportTroopsSent` |
+| 7 | **Grand Architect** | Buildings upgraded to max level (10) | 5 | 15 | 30 | Computed from `buildingsLevels` across all villages |
+| 8 | **Scholar** | Skills unlocked | 5 | 15 | 27 (all) | Computed from `skills` |
+| 9 | **King of the Hill** | Different oases conquered | 10 | 50 | 200 | `totalStats.oasesConquered` |
+
+---
+
+**New Stats Required:**
+
+Some achievements can be computed from existing data (Empire Builder, Grand Architect, Scholar). The rest require new lifetime counters on the user entity:
+
+| New Stat Field | Incremented When |
+|----------------|-----------------|
+| `totalStats.successfulSpies` | A spy mission returns successfully (not caught) |
+| `totalStats.relicsStolen` | A relic is taken from a defeated village via PvP |
+| `totalStats.resourcesSentToClan` | Resources are sent to a clanmate (sum of wood + stone + crop) |
+| `totalStats.mythicBossDamage` | Damage is dealt to a Mythic-tier boss |
+| `totalStats.supportTroopsSent` | Support troops are dispatched to an allied village |
+| `totalStats.oasesConquered` | A player's troops successfully claim an oasis (first garrison arrival at an unoccupied oasis) |
+
+---
+
+**Implementation:**
+- [ ] Utils: Add new achievement definitions to `achievementConsts.ts` (ids, names, descriptions, thresholds, stat fields)
+- [ ] Utils: Update `StatField` type to include new stat fields
+- [ ] Server: Add new lifetime stat counters to user entity (`totalStats`)
+- [ ] Server: Increment `successfulSpies` in spy service on successful mission
+- [ ] Server: Increment `relicsStolen` in movement service on relic theft
+- [ ] Server: Increment `resourcesSentToClan` in resource transfer service
+- [ ] Server: Increment `mythicBossDamage` in boss service (filter by Mythic tier)
+- [ ] Server: Increment `supportTroopsSent` in movement service on support dispatch
+- [ ] Server: Increment `oasesConquered` in oasis service on successful garrison claim
+- [ ] Server: Add computed achievement checks for Empire Builder, Grand Architect, Scholar (no new stat field — evaluate on login or relevant action)
+- [ ] Client: New achievements appear in achievement list with icons and progress bars
+
+---
+
 ## Priority Order
 
 1. **Oasis System** - HIGH. Solves the dead time problem, gives players something to do between energy cycles, adds map-level strategy
 2. **Daily Quests** - HIGH. Low effort to build, high daily retention impact, structures every session
 3. **Clan Missions** - MEDIUM. Keeps clans active between boss spawns, reinforces social bonds
 4. **Expert Spy** - MEDIUM. Enhances existing spy system, adds sustained intelligence layer
-5. **Trap Defense** - LOW. Cool concept, park for future. Build only after core engagement features are live
+5. **New Achievements & Titles** - MEDIUM. Low implementation effort, adds 27 new goals across 9 lines, rewards engagement with all game systems
+6. **Trap Defense** - LOW. Cool concept, park for future. Build only after core engagement features are live
 
 ---
