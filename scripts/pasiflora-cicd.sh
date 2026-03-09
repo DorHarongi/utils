@@ -128,9 +128,18 @@ deploy() {
   log "Starting Deploy"
   log "=========================================="
 
+  # Pull and build FIRST - only stop services if we're about to succeed.
+  # Previously: stop_services ran first, so if pull/build failed, services stayed down.
+  pull_repos || { log "Deploy aborted: pull failed"; return 1; }
+  build_projects || { log "Deploy aborted: build failed"; return 1; }
+
+  # Ensure mongo credentials exist (gitignore'd, can be deleted by pull in edge cases)
+  if [[ ! -f "$PASIFLORA_DIR/userService/mongo-credentials.txt" ]] || [[ ! -f "$PASIFLORA_DIR/dbUpdator/mongo-credentials.txt" ]]; then
+    log "Deploy aborted: mongo-credentials.txt missing (userService or dbUpdator)"
+    return 1
+  fi
+
   stop_services
-  pull_repos || return 1
-  build_projects || return 1
   start_services
 
   log "=========================================="
