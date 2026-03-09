@@ -73,11 +73,21 @@ export const OASIS_SPAWN_CHANCE = 0.7;
 export const OASIS_PROXIMITY_RANGE = 20;
 
 export function selectRandomOasisTier(): OasisTier {
-    const totalWeight = Object.values(oasisSpawnWeights).reduce((a, b) => a + b, 0);
+    const tiers = [
+        OasisTier.DUSTY_SPRINGS,
+        OasisTier.FERTILE_CLEARING,
+        OasisTier.HIDDEN_WELLSPRING,
+        OasisTier.ABUNDANT_GROVE,
+        OasisTier.GOLDEN_OASIS,
+    ];
+    let totalWeight = 0;
+    for (const t of tiers) {
+        totalWeight += oasisSpawnWeights[t];
+    }
     let roll = Math.random() * totalWeight;
-    for (const [tier, weight] of Object.entries(oasisSpawnWeights)) {
-        roll -= weight;
-        if (roll <= 0) return tier as OasisTier;
+    for (const t of tiers) {
+        roll -= oasisSpawnWeights[t];
+        if (roll <= 0) return t;
     }
     return OasisTier.DUSTY_SPRINGS;
 }
