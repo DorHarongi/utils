@@ -204,7 +204,7 @@ export const QUESTS: Quest[] = [
   },
   {
     id: 17,
-    title: "Unlock the Academy",
+    title: "Upgrade the Academy",
     description:
       "Upgrade your Academy to level 2. The Academy grants Skill Points you can invest in powerful bonuses for your village and army.",
     hint: "Click the Academy building and upgrade it to level 2",

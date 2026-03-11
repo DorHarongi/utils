@@ -204,7 +204,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_garrison_oasis',
         title: 'Land Grab',
-        description: 'Garrison troops at an oasis.',
+        description: 'Send troops to occupy an oasis.',
         category: DailyQuestCategory.OASIS,
         trackingType: DailyQuestTrackingType.GARRISON_OASIS,
         target: 1,
