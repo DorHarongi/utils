@@ -246,20 +246,6 @@ Occupied oasis detection:
 
 ---
 
-**Expert Spy on Oases:**
-
-The Expert Spy (section 2) can also be deployed to an oasis, not just enemy villages. When embedded at an oasis:
-
-- Same detection rules as regular oasis spying (100% if empty, wall-level-0 formula if occupied)
-- If successfully embedded, the Expert Spy monitors the oasis for hours and reports:
-  - When someone arrives to garrison or attack
-  - When someone retreats with their stash
-  - Troop counts of anyone coming or going
-  - When the oasis is drained and despawns
-- This turns oasis surveillance into a clan intelligence tool: "Park our Expert Spy on that rich oasis near the enemy clan's territory. We'll know the moment they show up."
-
----
-
 **Interaction with Skills:**
 
 | Skill | Effect on Oasis |
@@ -308,132 +294,7 @@ The Expert Spy (section 2) can also be deployed to an oasis, not just enemy vill
 - [ ] Client: Spy report for oasis (show occupancy, troops, stash)
 ---
 
-### 2. Expert Spy (Enhancement to Scouting System)
-**Priority:** Medium  
-**Complexity:** Medium
-
-**Description:**  
-A special elite spy unit — one per village — that can embed inside an enemy village **or an oasis** for hours and provide ongoing intelligence reports.
-
-Unlike regular spies (one-time snapshot), the Expert Spy is a **persistent surveillance agent**. It stays inside the target and sends intelligence home via crow messengers whenever events happen — no polling, no fixed intervals.
-
----
-
-**Core Design:**
-
-- **One Expert Spy per village** (each village can train and deploy its own)
-- **Separate pool from regular spies** — Expert Spy has its own slot, regen timer, and cooldown, completely independent of the regular spy pool. This avoids sync bugs between the two systems.
-- Unlocked at Stable level 5 (mid-game building investment required)
-- The Expert Spy is visually and mechanically distinct from regular spies — it's a special unit
-- When deployed, it embeds at the target for a **configurable duration** (default: 6 hours)
-- The Expert Spy is **event-driven**: whenever a relevant event occurs at the target (troops departing, arriving, support withdrawn, etc.), the spy dispatches a crow carrying the intelligence back to your village
-- After the duration expires, the Expert Spy returns home automatically
-
----
-
-**Crow Messenger System:**
-
-When the Expert Spy observes an event, it sends a **crow** back to the village that deployed it:
-- Crow travel speed: **20 tiles per minute** (fast but not instant — distance matters)
-- The crow appears in your **movements panel** with a dedicated crow icon, flying toward your village
-- Once the crow arrives, you receive the intelligence report in your inbox
-- The crow is one-way — it does not return to the Expert Spy
-- Multiple events = multiple crows in flight (you might see several crows incoming if a lot is happening at the target)
-
-This means intelligence is not instant. If your Expert Spy is embedded 40 tiles away, each report takes 2 minutes to reach you. If the target is nearby (5 tiles), you get near-real-time intel. **Distance to target directly affects how fresh your intelligence is.**
-
----
-
-**What Triggers a Crow:**
-
-**On enemy villages:**
-
-| Event | Report Content |
-|-------|---------------|
-| Troops depart for attack | "Target sent troops to attack [village coordinates] (500 troops)" |
-| Troops depart for boss | "Target sent troops to attack a boss at [coordinates]" |
-| Troops depart as support | "Target sent 300 troops as support to [village coordinates]" |
-| Support troops received | "Target received support troops from [player name]" |
-| Support troops withdrawn | "Support troops from [player name] have left the target" |
-| Troops return from PvP | "Target's troops returned from PvP — 200 survivors" |
-| Troops return from PvE | "Target's troops returned from boss raid — 450 survivors" |
-
-**On oases:**
-
-| Event | Report Content |
-|-------|---------------|
-| Someone arrives to garrison | "400 troops arrived at the oasis from [player name]" |
-| Someone attacks the oasis | "600 troops attacked the oasis — combat occurred" |
-| Someone retreats with stash | "[Player name] retreated from the oasis with their stash" |
-| Oasis drained | "The oasis has been fully drained and will despawn" |
-
-**Regular spy** = one-time snapshot, exact numbers. **Expert Spy** = ongoing event-driven surveillance, also exact numbers. The difference is duration and persistence, not accuracy.
-
----
-
-**Detection and Death:**
-
-- The Expert Spy has the **same detection formula as regular spies** (Wall + Stable + Silent Stealth for villages; wall-level-0 formula for oases)
-- Detection is rolled ONCE on arrival (same as regular spy)
-- If caught on arrival: Expert Spy dies immediately, defender gets alert, **24-hour cooldown** before clan gets a new Expert Spy
-- If NOT caught on arrival: Expert Spy is embedded safely for the full duration — no further detection rolls
-- The 24-hour cooldown (vs 12h for regular spies) makes losing the Expert Spy a significant blow to the clan
-
-**Why this makes Silent Stealth more valuable:**
-- Losing a regular spy is annoying (12h regen). Losing the Expert Spy cripples your clan's intelligence for 24h.
-- Players who invest in Silent Stealth III are protecting their clan's most valuable intelligence asset
-- The Expert Spy creates a real cost/benefit analysis for scouting: use a regular spy for a quick snapshot, or risk the Expert for deep sustained intelligence
-
----
-
-**Deployment Targets:**
-
-The Expert Spy can be deployed to:
-1. **Enemy villages** — reports on troop movements (support in/out, PvP/PvE attacks, returning troops)
-2. **Oases** — reports on who arrives and leaves, troop counts coming and going, when someone retreats with their stash, when the oasis is drained
-
-**Oasis-specific detection:** Same rules as regular oasis spying — 100% success on empty oasis, wall-level-0 formula if occupied (see section 1 "Spy Detection at Oases").
-
----
-
-**Limitations:**
-
-- Can only embed at **one target at a time** (you have one Expert Spy — village OR oasis, not both)
-- Cannot be recalled early once deployed (committed for the full duration)
-- If the Expert Spy's clan mate attacks the target during the embed, the Expert Spy is NOT revealed (they're separate operations)
-- The target has NO way to know they're being surveilled unless they catch the spy on arrival
-- Expert Spy does NOT reveal skill builds (consistent with regular spy design — skills stay secret)
-
----
-
-**UI:**
-
-- In the Stable building page: "Expert Spy" section (visible at Stable 5+) showing status: Available / Deployed / Dead (cooldown timer)
-- On map: village interaction for enemies has a third spy option: "Deploy Expert Spy" alongside the regular "Scout" button
-- Confirmation modal: "Deploy Expert Spy on [village name]? Duration: 6 hours. If caught, 24h cooldown."
-- Movements panel: incoming crow icon with travel progress (same as troop movements)
-- Inbox: Expert Spy reports appear as a special report type with their own icon, grouped by deployment mission
-
----
-
-**Implementation:**
-- [ ] Utils: Expert spy constants (embed duration, crow speed 20 tiles/min, cooldown)
-- [ ] Server: Expert spy state tracking (per village)
-- [ ] Server: Deploy endpoint — validate expert spy available, calculate arrival, detection roll on arrival
-- [ ] Server: Hook into movement/combat events — when a relevant event occurs at a surveilled target, create a crow movement
-- [ ] Server: Crow movement type — one-way movement from target to deployer's village, carries intel payload
-- [ ] Server: On crow arrival — deliver intelligence report to deployer's inbox
-- [ ] Server: Auto-return after embed duration expires
-- [ ] Server: 24h cooldown on death (tracked per village)
-- [ ] Client: Expert Spy section in Stable UI
-- [ ] Client: "Deploy Expert Spy" button on village interaction (disabled if unavailable)
-- [ ] Client: Crow icon in movements panel (incoming crow with travel time)
-- [ ] Client: Expert Spy reports in inbox (special styling, grouped per mission)
-- [ ] Client: Expert Spy status indicator (in Stable page or top toolbar)
-
----
-
-### 3. Daily Quests (Rotating)
+### 2. Daily Quests (Rotating)
 **Priority:** High  
 **Complexity:** Low-Medium
 
@@ -516,7 +377,7 @@ If a player completes all 3 daily quests:
 
 ---
 
-### 4. Clan Missions (Weekly)
+### 3. Clan Missions (Weekly)
 **Priority:** Medium  
 **Complexity:** Low-Medium
 
@@ -577,7 +438,7 @@ This keeps clan chat active between boss spawns and gives the clan a shared focu
 
 ---
 
-### 5. Trap Defense System
+### 4. Trap Defense System
 **Priority:** Low (future consideration)  
 **Complexity:** Medium
 
@@ -633,7 +494,7 @@ This feature is interesting but adds balancing complexity. It's documented here 
 
 ---
 
-### 6. New Achievements & Titles
+### 5. New Achievements & Titles
 **Priority:** Medium  
 **Complexity:** Low
 
@@ -693,8 +554,7 @@ Some achievements can be computed from existing data (Empire Builder, Grand Arch
 1. **Oasis System** - HIGH. Solves the dead time problem, gives players something to do between energy cycles, adds map-level strategy
 2. **Daily Quests** - HIGH. Low effort to build, high daily retention impact, structures every session
 3. **Clan Missions** - MEDIUM. Keeps clans active between boss spawns, reinforces social bonds
-4. **Expert Spy** - MEDIUM. Enhances existing spy system, adds sustained intelligence layer
-5. **New Achievements & Titles** - MEDIUM. Low implementation effort, adds 27 new goals across 9 lines, rewards engagement with all game systems
+4. **New Achievements & Titles** - MEDIUM. Low implementation effort, adds 27 new goals across 9 lines, rewards engagement with all game systems
 6. **Trap Defense** - LOW. Cool concept, park for future. Build only after core engagement features are live
 
 ---

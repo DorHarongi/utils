@@ -34,4 +34,3 @@ export * from "./bosses/bossConsts";
 export * from "./clans/clanConsts";
 export * from "./relics/relicConsts";
 export * from "./oasis";
-export * from "./expertSpy";
