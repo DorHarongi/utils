@@ -262,3 +262,24 @@ export function getDailyQuestSeed(): number {
     const now = new Date();
     return now.getUTCFullYear() * 10000 + (now.getUTCMonth() + 1) * 100 + now.getUTCDate();
 }
+
+const SCALED_TRACKING_TYPES = new Set<DailyQuestTrackingType>([
+    DailyQuestTrackingType.DEAL_BOSS_DAMAGE,
+    DailyQuestTrackingType.STEAL_RESOURCES,
+    DailyQuestTrackingType.TRAIN_TROOPS,
+    DailyQuestTrackingType.HIRE_WORKERS,
+    DailyQuestTrackingType.RETREAT_OASIS_WITH_RESOURCES,
+]);
+
+const BASE_ATTACK_POWER = 800;
+
+export function scaleQuestTarget(
+    baseTarget: number,
+    trackingType: DailyQuestTrackingType,
+    totalAttackPower: number,
+): number {
+    if (!SCALED_TRACKING_TYPES.has(trackingType)) return baseTarget;
+    if (totalAttackPower <= BASE_ATTACK_POWER) return baseTarget;
+    const multiplier = Math.sqrt(totalAttackPower / BASE_ATTACK_POWER);
+    return Math.round(baseTarget * multiplier);
+}
