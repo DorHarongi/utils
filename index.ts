@@ -1,3 +1,4 @@
+export * from "./numberUtils";
 export * from "./materialsCost";
 export * from "./skills/skillConsts";
 export * from "./skills/skillResetConsts";

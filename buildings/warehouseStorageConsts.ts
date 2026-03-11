@@ -1,3 +1,4 @@
+import { prettifyNumber } from "../numberUtils";
 
 export const warehouseStorageByLevel = [0, 5000, 12500, 30000, 75000, 187500, 475000, 1250000, 3000000, 10000000, 25000000];
 
@@ -14,8 +15,8 @@ export function scaleQuestReward(
 ): { wood: number; stone: number; crop: number } {
     const multiplier = getQuestRewardMultiplier(lowestWarehouseCapacity);
     return {
-        wood: Math.floor(baseReward.wood * multiplier),
-        stone: Math.floor(baseReward.stone * multiplier),
-        crop: Math.floor(baseReward.crop * multiplier),
+        wood: prettifyNumber(Math.floor(baseReward.wood * multiplier)),
+        stone: prettifyNumber(Math.floor(baseReward.stone * multiplier)),
+        crop: prettifyNumber(Math.floor(baseReward.crop * multiplier)),
     };
 }
