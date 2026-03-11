@@ -125,13 +125,21 @@ export const MAX_BOSSES_ON_MAP = 10;
 // Spawn check interval (30 minutes in cron expression)
 export const BOSS_SPAWN_CRON = "0 */30 * * * *";
 
-// Minimap colors for bosses
+// Minimap & rarity colors (shared palette for bosses and oases)
+export const rarityColors: Record<string, string> = {
+  common: "#808080",
+  rare: "#3498db",
+  epic: "#9b59b6",
+  legendary: "#f1c40f",
+  mythic: "#e74c3c",
+};
+
 export const bossMinimapColors: Record<BossTier, string> = {
-  [BossTier.COMMON]: "#808080", // Gray
-  [BossTier.RARE]: "#3498db", // Blue
-  [BossTier.EPIC]: "#9b59b6", // Purple
-  [BossTier.LEGENDARY]: "#f1c40f", // Gold
-  [BossTier.MYTHIC]: "#e74c3c", // Red-gold highlight for Mythic
+  [BossTier.COMMON]: rarityColors.common,
+  [BossTier.RARE]: rarityColors.rare,
+  [BossTier.EPIC]: rarityColors.epic,
+  [BossTier.LEGENDARY]: rarityColors.legendary,
+  [BossTier.MYTHIC]: rarityColors.mythic,
 };
 
 // Claimed boss indicator color (orange - distinct from green villages)

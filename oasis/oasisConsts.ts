@@ -34,21 +34,21 @@ export const oasisTierConfigs: Record<OasisTier, OasisTierConfig> = {
         wood: 3_000_000,
         stone: 3_000_000,
         crop: 3_000_000,
-        rarity: 'Uncommon',
+        rarity: 'Rare',
     },
     [OasisTier.ABUNDANT_GROVE]: {
         name: 'Abundant Grove',
         wood: 4_500_000,
         stone: 3_000_000,
         crop: 6_000_000,
-        rarity: 'Rare',
+        rarity: 'Epic',
     },
     [OasisTier.GOLDEN_OASIS]: {
         name: 'Golden Oasis',
         wood: 8_000_000,
         stone: 8_000_000,
         crop: 8_000_000,
-        rarity: 'Very Rare',
+        rarity: 'Legendary',
     },
 };
 
