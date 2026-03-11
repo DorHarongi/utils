@@ -8,7 +8,7 @@ export enum BossTier {
   MYTHIC = "mythic",
 }
 
-export type BossReportType = "pvp" | "boss" | "spy";
+export type BossReportType = "pvp" | "boss" | "spy" | "oasis";
 
 // HP ranges per tier (min, max)
 export const bossHpRanges: Record<BossTier, { min: number; max: number }> = {

@@ -72,6 +72,28 @@ export const OASIS_SPAWN_CHANCE = 0.7;
 
 export const OASIS_PROXIMITY_RANGE = 20;
 
+export function generateOasisResources(tier: OasisTier): { wood: number; stone: number; crop: number } {
+    const config = oasisTierConfigs[tier];
+    const base = [config.wood, config.stone, config.crop];
+
+    const randomized = base.map(val => {
+        const minVal = Math.floor(val * 0.9);
+        const maxVal = Math.floor(val * 1.1);
+        return minVal + Math.floor(Math.random() * (maxVal - minVal + 1));
+    });
+
+    const maxRandom = Math.max(randomized[0], randomized[1], randomized[2]);
+    const minRandom = Math.min(randomized[0], randomized[1], randomized[2]);
+    if (maxRandom > 0 && (maxRandom - minRandom) / maxRandom > 0.1) {
+        const cap = Math.floor(maxRandom * 0.9);
+        for (let i = 0; i < randomized.length; i++) {
+            if (randomized[i] < cap) randomized[i] = cap;
+        }
+    }
+
+    return { wood: randomized[0], stone: randomized[1], crop: randomized[2] };
+}
+
 export function selectRandomOasisTier(): OasisTier {
     const tiers = [
         OasisTier.DUSTY_SPRINGS,
