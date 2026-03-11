@@ -1,3 +1,5 @@
+import { prettifyNumber } from '../numberUtils';
+
 export enum DailyQuestCategory {
     PVP = 'PVP',
     PVE = 'PVE',
@@ -281,5 +283,5 @@ export function scaleQuestTarget(
     if (!SCALED_TRACKING_TYPES.has(trackingType)) return baseTarget;
     if (totalAttackPower <= BASE_ATTACK_POWER) return baseTarget;
     const multiplier = Math.sqrt(totalAttackPower / BASE_ATTACK_POWER);
-    return Math.round(baseTarget * multiplier);
+    return prettifyNumber(Math.round(baseTarget * multiplier));
 }
