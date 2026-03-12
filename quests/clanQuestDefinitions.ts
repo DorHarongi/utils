@@ -32,7 +32,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_boss_damage_500k',
         title: 'Clan Boss Slayers',
-        description: 'Deal 500,000 total boss damage as a clan this week.',
+        description: 'Deal {target} total boss damage as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_BOSS_DAMAGE,
         target: 500_000,
         reward: { wood: 10000, stone: 10000, crop: 10000 },
@@ -40,7 +40,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_boss_damage_1m',
         title: 'Dragon Hunters',
-        description: 'Deal 1,000,000 total boss damage as a clan this week.',
+        description: 'Deal {target} total boss damage as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_BOSS_DAMAGE,
         target: 1_000_000,
         reward: { wood: 15000, stone: 15000, crop: 15000 },
@@ -48,7 +48,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_boss_damage_2m',
         title: 'Titan Crushers',
-        description: 'Deal 2,000,000 total boss damage as a clan this week.',
+        description: 'Deal {target} total boss damage as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_BOSS_DAMAGE,
         target: 2_000_000,
         reward: { wood: 20000, stone: 20000, crop: 20000 },
@@ -56,7 +56,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_raid_300k',
         title: 'Clan Raiders',
-        description: 'Steal 300,000 total resources via PvP as a clan this week.',
+        description: 'Steal {target} total resources via PvP as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_RESOURCES_STOLEN,
         target: 300_000,
         reward: { wood: 7500, stone: 7500, crop: 7500 },
@@ -64,7 +64,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_raid_1m',
         title: 'Warlords',
-        description: 'Steal 1,000,000 total resources via PvP as a clan this week.',
+        description: 'Steal {target} total resources via PvP as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_RESOURCES_STOLEN,
         target: 1_000_000,
         reward: { wood: 15000, stone: 15000, crop: 15000 },
@@ -72,7 +72,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_defense_15',
         title: 'Iron Fortress',
-        description: 'Successfully defend 15 attacks across all clan members this week.',
+        description: 'Successfully defend {target} attacks across all clan members this week.',
         trackingType: ClanQuestTrackingType.TOTAL_DEFENSES,
         target: 15,
         reward: { wood: 10000, stone: 10000, crop: 10000 },
@@ -80,7 +80,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_defense_30',
         title: 'Unbreakable',
-        description: 'Successfully defend 30 attacks across all clan members this week.',
+        description: 'Successfully defend {target} attacks across all clan members this week.',
         trackingType: ClanQuestTrackingType.TOTAL_DEFENSES,
         target: 30,
         reward: { wood: 15000, stone: 15000, crop: 15000 },
@@ -88,7 +88,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_train_5000',
         title: 'Army Builders',
-        description: 'Train 5,000 troops collectively this week.',
+        description: 'Train {target} troops collectively this week.',
         trackingType: ClanQuestTrackingType.TOTAL_TROOPS_TRAINED,
         target: 5_000,
         reward: { wood: 5000, stone: 5000, crop: 5000 },
@@ -96,7 +96,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_train_10000',
         title: 'Grand Army',
-        description: 'Train 10,000 troops collectively this week.',
+        description: 'Train {target} troops collectively this week.',
         trackingType: ClanQuestTrackingType.TOTAL_TROOPS_TRAINED,
         target: 10_000,
         reward: { wood: 10000, stone: 10000, crop: 10000 },
@@ -104,7 +104,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_spy_20',
         title: 'Scout Network',
-        description: 'Complete 20 successful spy missions as a clan this week.',
+        description: 'Complete {target} successful spy missions as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_SUCCESSFUL_SPIES,
         target: 20,
         reward: { wood: 7500, stone: 7500, crop: 7500 },
@@ -112,7 +112,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_spy_40',
         title: 'Eyes Everywhere',
-        description: 'Complete 40 successful spy missions as a clan this week.',
+        description: 'Complete {target} successful spy missions as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_SUCCESSFUL_SPIES,
         target: 40,
         reward: { wood: 12000, stone: 12000, crop: 12000 },
@@ -120,7 +120,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_support_10',
         title: 'Brothers in Arms',
-        description: 'Send 10 support troop shipments to clanmates this week.',
+        description: 'Send {target} support troop shipments to clanmates this week.',
         trackingType: ClanQuestTrackingType.TOTAL_SUPPORT_SHIPMENTS,
         target: 10,
         reward: { wood: 7500, stone: 7500, crop: 7500 },
@@ -128,7 +128,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_pvp_25',
         title: 'Conquerors',
-        description: 'Win 25 PvP battles as a clan this week.',
+        description: 'Win {target} PvP battles as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_PVP_WINS,
         target: 25,
         reward: { wood: 10000, stone: 10000, crop: 10000 },
@@ -136,7 +136,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_pvp_50',
         title: 'Warmongers',
-        description: 'Win 50 PvP battles as a clan this week.',
+        description: 'Win {target} PvP battles as a clan this week.',
         trackingType: ClanQuestTrackingType.TOTAL_PVP_WINS,
         target: 50,
         reward: { wood: 15000, stone: 15000, crop: 15000 },
@@ -144,7 +144,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_workers_1000',
         title: 'Industrialists',
-        description: 'Hire 1,000 workers collectively this week.',
+        description: 'Hire {target} workers collectively this week.',
         trackingType: ClanQuestTrackingType.TOTAL_WORKERS_HIRED,
         target: 1_000,
         reward: { wood: 5000, stone: 5000, crop: 5000 },
@@ -152,7 +152,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_buildings_10',
         title: 'Master Architects',
-        description: 'Upgrade 10 buildings across all clan members this week.',
+        description: 'Upgrade {target} buildings across all clan members this week.',
         trackingType: ClanQuestTrackingType.TOTAL_BUILDINGS_UPGRADED,
         target: 10,
         reward: { wood: 7500, stone: 7500, crop: 7500 },
@@ -160,7 +160,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_resource_shipments_20',
         title: 'Supply Lines',
-        description: 'Send 20 resource shipments to clanmates this week.',
+        description: 'Send {target} resource shipments to clanmates this week.',
         trackingType: ClanQuestTrackingType.TOTAL_RESOURCE_SHIPMENTS,
         target: 20,
         reward: { wood: 7500, stone: 7500, crop: 7500 },
@@ -168,7 +168,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_oasis_5',
         title: 'Oasis Dominators',
-        description: 'Conquer 5 oases collectively this week.',
+        description: 'Conquer {target} oases collectively this week.',
         trackingType: ClanQuestTrackingType.TOTAL_OASES_CONQUERED,
         target: 5,
         reward: { wood: 10000, stone: 10000, crop: 10000 },
@@ -176,7 +176,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_oasis_harvest_1m',
         title: 'Harvesters',
-        description: 'Harvest 1,000,000 total resources from oases this week.',
+        description: 'Harvest {target} total resources from oases this week.',
         trackingType: ClanQuestTrackingType.TOTAL_OASIS_RESOURCES_HARVESTED,
         target: 1_000_000,
         reward: { wood: 12000, stone: 12000, crop: 12000 },
@@ -184,7 +184,7 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
     {
         id: 'cq_support_20',
         title: 'Shield Wall',
-        description: 'Send 20 support troop shipments to clanmates this week.',
+        description: 'Send {target} support troop shipments to clanmates this week.',
         trackingType: ClanQuestTrackingType.TOTAL_SUPPORT_SHIPMENTS,
         target: 20,
         reward: { wood: 12000, stone: 12000, crop: 12000 },

@@ -60,7 +60,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_win_pvp_2',
         title: 'Double Strike',
-        description: 'Win 2 PvP attacks against other players.',
+        description: 'Win {target} PvP attacks against other players.',
         category: DailyQuestCategory.PVP,
         trackingType: DailyQuestTrackingType.WIN_PVP_ATTACKS,
         target: 2,
@@ -78,7 +78,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_steal_resources',
         title: 'Plunder',
-        description: 'Steal 50,000 total resources via PvP raids.',
+        description: 'Steal {target} total resources via PvP raids.',
         category: DailyQuestCategory.PVP,
         trackingType: DailyQuestTrackingType.STEAL_RESOURCES,
         target: 50_000,
@@ -96,7 +96,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_boss_damage_5k',
         title: 'Monster Hunter',
-        description: 'Deal at least 5,000 damage to a boss in a single attack.',
+        description: 'Deal at least {target} damage to a boss in a single attack.',
         category: DailyQuestCategory.PVE,
         trackingType: DailyQuestTrackingType.DEAL_BOSS_DAMAGE,
         target: 5_000,
@@ -105,7 +105,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_boss_damage_10k',
         title: 'Beast Slayer',
-        description: 'Deal at least 10,000 total boss damage today.',
+        description: 'Deal at least {target} total boss damage today.',
         category: DailyQuestCategory.PVE,
         trackingType: DailyQuestTrackingType.DEAL_BOSS_DAMAGE,
         target: 10_000,
@@ -114,7 +114,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_attack_2_bosses',
         title: 'Boss Rush',
-        description: 'Attack 2 different bosses today.',
+        description: 'Attack {target} different bosses today.',
         category: DailyQuestCategory.PVE,
         trackingType: DailyQuestTrackingType.ATTACK_DIFFERENT_BOSSES,
         target: 2,
@@ -123,7 +123,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_train_100',
         title: 'Enlistment',
-        description: 'Train 100 troops of any type.',
+        description: 'Train {target} troops of any type.',
         category: DailyQuestCategory.ECONOMY,
         trackingType: DailyQuestTrackingType.TRAIN_TROOPS,
         target: 100,
@@ -132,7 +132,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_train_200',
         title: 'Mobilization',
-        description: 'Train 200 troops of any type.',
+        description: 'Train {target} troops of any type.',
         category: DailyQuestCategory.ECONOMY,
         trackingType: DailyQuestTrackingType.TRAIN_TROOPS,
         target: 200,
@@ -141,7 +141,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_hire_50',
         title: 'Workforce Expansion',
-        description: 'Hire 50 workers across your villages.',
+        description: 'Hire {target} workers across your villages.',
         category: DailyQuestCategory.ECONOMY,
         trackingType: DailyQuestTrackingType.HIRE_WORKERS,
         target: 50,
@@ -150,7 +150,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_hire_100',
         title: 'Industrial Boom',
-        description: 'Hire 100 workers across your villages.',
+        description: 'Hire {target} workers across your villages.',
         category: DailyQuestCategory.ECONOMY,
         trackingType: DailyQuestTrackingType.HIRE_WORKERS,
         target: 100,
@@ -168,7 +168,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_spy_2',
         title: 'Intelligence Gathering',
-        description: 'Complete 2 successful spy missions.',
+        description: 'Complete {target} successful spy missions.',
         category: DailyQuestCategory.SCOUTING,
         trackingType: DailyQuestTrackingType.SUCCESSFUL_SPIES,
         target: 2,
@@ -177,7 +177,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_spy_3',
         title: 'Master Spy',
-        description: 'Complete 3 successful spy missions.',
+        description: 'Complete {target} successful spy missions.',
         category: DailyQuestCategory.SCOUTING,
         trackingType: DailyQuestTrackingType.SUCCESSFUL_SPIES,
         target: 3,
@@ -213,7 +213,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_retreat_oasis',
         title: 'Cash Out',
-        description: 'Retreat from an oasis with at least 50,000 of any resource.',
+        description: 'Retreat from an oasis with at least {target} of any resource.',
         category: DailyQuestCategory.OASIS,
         trackingType: DailyQuestTrackingType.RETREAT_OASIS_WITH_RESOURCES,
         target: 50_000,
