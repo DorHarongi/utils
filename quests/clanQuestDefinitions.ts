@@ -189,6 +189,22 @@ export const CLAN_QUEST_POOL: ClanQuestDefinition[] = [
         target: 20,
         reward: { wood: 12000, stone: 12000, crop: 12000 },
     },
+    {
+        id: 'cq_oasis_10',
+        title: 'Land Empire',
+        description: 'Conquer {target} oases collectively this week.',
+        trackingType: ClanQuestTrackingType.TOTAL_OASES_CONQUERED,
+        target: 10,
+        reward: { wood: 15000, stone: 15000, crop: 15000 },
+    },
+    {
+        id: 'cq_oasis_harvest_3m',
+        title: 'Grand Harvest',
+        description: 'Harvest {target} total resources from oases this week.',
+        trackingType: ClanQuestTrackingType.TOTAL_OASIS_RESOURCES_HARVESTED,
+        target: 3_000_000,
+        reward: { wood: 20000, stone: 20000, crop: 20000 },
+    },
 ];
 
 export function selectClanQuest(seed: number): ClanQuestDefinition {

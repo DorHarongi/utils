@@ -228,6 +228,33 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
         target: 1,
         reward: { wood: 3000, stone: 3000, crop: 3000 },
     },
+    {
+        id: 'dq_garrison_oasis_2',
+        title: 'Oasis Conqueror',
+        description: 'Occupy {target} oases today.',
+        category: DailyQuestCategory.OASIS,
+        trackingType: DailyQuestTrackingType.GARRISON_OASIS,
+        target: 2,
+        reward: { wood: 4000, stone: 4000, crop: 4000 },
+    },
+    {
+        id: 'dq_retreat_oasis_100k',
+        title: 'Resource Hauler',
+        description: 'Collect at least {target} total resources from oases today.',
+        category: DailyQuestCategory.OASIS,
+        trackingType: DailyQuestTrackingType.RETREAT_OASIS_WITH_RESOURCES,
+        target: 100_000,
+        reward: { wood: 4500, stone: 4500, crop: 4500 },
+    },
+    {
+        id: 'dq_attack_oasis_2',
+        title: 'Oasis Warmonger',
+        description: 'Attack {target} occupied oases today.',
+        category: DailyQuestCategory.OASIS,
+        trackingType: DailyQuestTrackingType.ATTACK_OASIS,
+        target: 2,
+        reward: { wood: 4000, stone: 4000, crop: 4000 },
+    },
 ];
 
 export const DAILY_QUESTS_PER_DAY = 3;
