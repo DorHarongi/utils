@@ -67,7 +67,7 @@ export const QUESTS: Quest[] = [
     description:
       "Upgrade your Arsenal to level 2. This unlocks Axe Fighters - stronger troops for battle!",
     hint: "Click the Arsenal building",
-    rewards: { wood: 1500, stone: 1500, crop: 6000 },
+    rewards: { wood: 2500, stone: 2500, crop: 5000 },
     condition: {
       type: QuestCompletionType.BUILDING_LEVEL,
       buildingName: "arsenal",
