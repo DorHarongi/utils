@@ -56,6 +56,9 @@ log() {
 CERT_DIR="$PASIFLORA_DIR/certs"
 CERT_FILE="$CERT_DIR/fullchain.pem"
 KEY_FILE="$CERT_DIR/privkey.pem"
+CLIENT_DIST="$PASIFLORA_DIR/client/dist"
+NGINX_CONF_SRC="$PASIFLORA_DIR/utils/nginx-pasiflora.conf"
+NGINX_CONF_DST="/etc/nginx/sites-available/pasiflora"
 
 stop_services() {
   log "Stopping services..."
@@ -64,7 +67,6 @@ stop_services() {
   pkill -9 -f "node main.js" 2>/dev/null
   pkill -9 -f "node db-updator.js" 2>/dev/null
   pkill -9 -f "PASIFLORA_SVC" 2>/dev/null
-  pkill -9 -f "pasiflora-cicd" 2>/dev/null
 
   sleep 2
   log "Services stopped."
@@ -95,7 +97,42 @@ build_projects() {
   cd "$PASIFLORA_DIR/userService" || return 1
   npm run build || return 1
 
+  log "Building client (to dist/client-new for atomic deploy)..."
+  cd "$PASIFLORA_DIR/client" || return 1
+  ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
+
   return 0
+}
+
+deploy_frontend() {
+  # Atomic swap: deploy client-new -> client (0 downtime)
+  if [[ -d "$CLIENT_DIST/client-new" ]]; then
+    log "Atomic deploy: swapping client-new -> client"
+    rm -rf "$CLIENT_DIST/client-old"
+    [[ -d "$CLIENT_DIST/client" ]] && mv "$CLIENT_DIST/client" "$CLIENT_DIST/client-old"
+    mv "$CLIENT_DIST/client-new" "$CLIENT_DIST/client"
+  fi
+
+  if command -v nginx &>/dev/null; then
+    # Ensure nginx config is installed
+    if [[ -f "$NGINX_CONF_SRC" ]]; then
+      sudo cp "$NGINX_CONF_SRC" "$NGINX_CONF_DST" 2>/dev/null
+      sudo ln -sf "$NGINX_CONF_DST" /etc/nginx/sites-enabled/pasiflora 2>/dev/null
+    fi
+    # Start or reload nginx (graceful, ~0 downtime)
+    if sudo systemctl is-active --quiet nginx 2>/dev/null; then
+      sudo nginx -t 2>/dev/null && sudo systemctl reload nginx
+    else
+      sudo systemctl start nginx
+    fi
+  else
+    # Fallback: ng serve when nginx not installed (smooth migration)
+    log "nginx not installed, using ng serve fallback"
+    NG_OPTS="--configuration=production --host 0.0.0.0 --port 443 --disable-host-check"
+    [[ -f "$CERT_FILE" && -f "$KEY_FILE" ]] && NG_OPTS="$NG_OPTS --ssl --ssl-cert $CERT_FILE --ssl-key $KEY_FILE"
+    ( export PASIFLORA_SVC=client; source ~/.nvm/nvm.sh 2>/dev/null
+      cd "$PASIFLORA_DIR/client" && ng serve $NG_OPTS ) >> "$LOG_DIR/client.log" 2>&1 &
+  fi
 }
 
 start_services() {
@@ -113,16 +150,8 @@ start_services() {
     fi
   fi
 
-  NG_SERVE_OPTS="--configuration=production --host 0.0.0.0 --port 80 --disable-host-check"
-  if [[ -f "$CERT_FILE" && -f "$KEY_FILE" ]]; then
-    NG_SERVE_OPTS="$NG_SERVE_OPTS --ssl --ssl-cert $CERT_FILE --ssl-key $KEY_FILE"
-  fi
-
-  (
-    export PASIFLORA_SVC=client
-    source ~/.nvm/nvm.sh 2>/dev/null
-    cd "$PASIFLORA_DIR/client" && ng serve $NG_SERVE_OPTS
-  ) >> "$LOG_DIR/client.log" 2>&1 &
+  # Frontend: nginx (deploy_frontend does atomic swap + nginx reload)
+  deploy_frontend
 
   sleep 1
 
