@@ -119,8 +119,15 @@ export const BOSS_CLAIM_DURATION_MS = 48 * 60 * 60 * 1000;
 // Boss despawn duration for unclaimed bosses (48 hours)
 export const BOSS_UNCLAIMED_DESPAWN_MS = 48 * 60 * 60 * 1000;
 
-// Maximum bosses on map at once (mythic bosses are exempt from this cap)
-export const MAX_BOSSES_ON_MAP = 10;
+// Dynamic boss cap based on player count: max(10, ceil(playerCount / 5))
+export function getMaxBossesOnMap(playerCount: number): number {
+  return Math.max(10, Math.ceil(playerCount / 5));
+}
+
+// Per-clan claim limit: max(3, floor(maxBosses * 0.25))
+export function getMaxClaimsPerClan(maxBosses: number): number {
+  return Math.max(3, Math.floor(maxBosses * 0.25));
+}
 
 // Spawn check interval (30 minutes in cron expression)
 export const BOSS_SPAWN_CRON = "0 */30 * * * *";
