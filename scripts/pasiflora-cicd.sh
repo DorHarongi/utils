@@ -53,6 +53,10 @@ log() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
 }
 
+CERT_DIR="$PASIFLORA_DIR/certs"
+CERT_FILE="$CERT_DIR/fullchain.pem"
+KEY_FILE="$CERT_DIR/privkey.pem"
+
 stop_services() {
   log "Stopping services..."
 
@@ -60,6 +64,7 @@ stop_services() {
   pkill -9 -f "node main.js" 2>/dev/null
   pkill -9 -f "node db-updator.js" 2>/dev/null
   pkill -9 -f "PASIFLORA_SVC" 2>/dev/null
+  pkill -9 -f "pasiflora-cicd" 2>/dev/null
 
   sleep 2
   log "Services stopped."
@@ -96,12 +101,27 @@ build_projects() {
 start_services() {
   log "Starting services..."
 
-  mkdir -p "$LOG_DIR"
+  mkdir -p "$LOG_DIR" "$CERT_DIR"
+
+  # Ensure certs exist (copy from letsencrypt if missing, e.g. after renewal)
+  if [[ ! -f "$CERT_FILE" || ! -f "$KEY_FILE" ]]; then
+    if [[ -f /etc/letsencrypt/live/emperium.hopto.org/fullchain.pem ]]; then
+      log "Copying SSL certs from letsencrypt..."
+      sudo cp /etc/letsencrypt/live/emperium.hopto.org/fullchain.pem "$CERT_FILE" 2>/dev/null
+      sudo cp /etc/letsencrypt/live/emperium.hopto.org/privkey.pem "$KEY_FILE" 2>/dev/null
+      sudo chown "$(whoami)" "$CERT_FILE" "$KEY_FILE" 2>/dev/null
+    fi
+  fi
+
+  NG_SERVE_OPTS="--configuration=production --host 0.0.0.0 --port 80 --disable-host-check"
+  if [[ -f "$CERT_FILE" && -f "$KEY_FILE" ]]; then
+    NG_SERVE_OPTS="$NG_SERVE_OPTS --ssl --ssl-cert $CERT_FILE --ssl-key $KEY_FILE"
+  fi
 
   (
     export PASIFLORA_SVC=client
     source ~/.nvm/nvm.sh 2>/dev/null
-    cd "$PASIFLORA_DIR/client" && ng serve --configuration=production --host 0.0.0.0 --port 80 --disable-host-check
+    cd "$PASIFLORA_DIR/client" && ng serve $NG_SERVE_OPTS
   ) >> "$LOG_DIR/client.log" 2>&1 &
 
   sleep 1
