@@ -182,7 +182,7 @@ export const QUESTS: Quest[] = [
     description:
       "Upgrade your Wall to level 2. Walls add defense bonus to your village and increase spy detection chance!",
     hint: "Click the Wall building",
-    rewards: { wood: 6750, stone: 8500, crop: 1700 },
+    rewards: { wood: 6750, stone: 8500, crop: 3500 },
     condition: {
       type: QuestCompletionType.BUILDING_LEVEL,
       buildingName: "wall",
@@ -208,7 +208,7 @@ export const QUESTS: Quest[] = [
     description:
       "Upgrade your Academy to level 2. The Academy grants Skill Points you can invest in powerful bonuses for your village and army.",
     hint: "Click the Academy building and upgrade it to level 2",
-    rewards: { wood: 5000, stone: 5000, crop: 5000 },
+    rewards: { wood: 8000, stone: 10000, crop: 5000 },
     condition: {
       type: QuestCompletionType.BUILDING_LEVEL,
       buildingName: "academy",

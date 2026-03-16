@@ -1,3 +1,5 @@
+import { prettifyNumber } from '../numberUtils';
+
 export enum OasisTier {
     DUSTY_SPRINGS = 'dusty_springs',
     FERTILE_CLEARING = 'fertile_clearing',
@@ -94,7 +96,11 @@ export function generateOasisResources(tier: OasisTier): { wood: number; stone: 
         }
     }
 
-    return { wood: randomized[0], stone: randomized[1], crop: randomized[2] };
+    return {
+        wood: prettifyNumber(randomized[0]),
+        stone: prettifyNumber(randomized[1]),
+        crop: prettifyNumber(randomized[2]),
+    };
 }
 
 export function selectRandomOasisTier(): OasisTier {
