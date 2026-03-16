@@ -6,7 +6,7 @@ const BASE_WAREHOUSE_CAPACITY = 5000;
 
 export function getQuestRewardMultiplier(lowestWarehouseCapacity: number): number {
     if (lowestWarehouseCapacity <= BASE_WAREHOUSE_CAPACITY) return 1;
-    return Math.pow(lowestWarehouseCapacity / BASE_WAREHOUSE_CAPACITY, 0.45);
+    return Math.pow(lowestWarehouseCapacity / BASE_WAREHOUSE_CAPACITY, 0.55);
 }
 
 export function scaleQuestReward(
