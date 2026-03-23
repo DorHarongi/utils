@@ -112,7 +112,7 @@ build_projects() {
   log "Installing & building client (to dist/client-new for atomic deploy)..."
   cd "$PASIFLORA_DIR/client" || return 1
   npm ci || return 1
-  ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
+  npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
 
   return 0
 }
@@ -144,7 +144,7 @@ deploy_frontend() {
     NG_OPTS="--configuration=production --host 0.0.0.0 --port 443 --disable-host-check"
     [[ -f "$CERT_FILE" && -f "$KEY_FILE" ]] && NG_OPTS="$NG_OPTS --ssl --ssl-cert $CERT_FILE --ssl-key $KEY_FILE"
     ( export PASIFLORA_SVC=client; source ~/.nvm/nvm.sh 2>/dev/null
-      cd "$PASIFLORA_DIR/client" && ng serve $NG_OPTS ) >> "$LOG_DIR/client.log" 2>&1 &
+      cd "$PASIFLORA_DIR/client" && npx ng serve $NG_OPTS ) >> "$LOG_DIR/client.log" 2>&1 &
   fi
 }
 
