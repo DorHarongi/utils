@@ -85,6 +85,7 @@ export const QUESTS: Quest[] = [
       type: QuestCompletionType.TRAIN_TROOPS,
       count: 10,
     },
+    highlightBuildings: ["arsenal"],
   },
   {
     id: 7,
@@ -97,6 +98,7 @@ export const QUESTS: Quest[] = [
       type: QuestCompletionType.HIRE_WORKERS,
       count: 50,
     },
+    highlightBuildings: ["woodFactory", "stoneMine", "cropFarm"],
   },
   {
     id: 8,
@@ -225,6 +227,7 @@ export const QUESTS: Quest[] = [
     condition: {
       type: QuestCompletionType.JOIN_CLAN,
     },
+    highlightBuildings: ["embassy"],
   },
 ];
 

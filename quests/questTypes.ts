@@ -27,6 +27,7 @@ export interface Quest {
     hint: string;           // Short tip shown in floating widget
     rewards: QuestReward;
     condition: QuestCompletionCondition;
+    highlightBuildings?: string[];
 }
 
 export interface QuestCompletionResult {
