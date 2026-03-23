@@ -87,8 +87,17 @@ pull_repos() {
   return 0
 }
 
+fix_node_modules_permissions() {
+  for repo in "${REPOS[@]}"; do
+    if [[ -d "$repo/node_modules" ]]; then
+      sudo chown -R "$(whoami)" "$repo/node_modules" 2>/dev/null
+    fi
+  done
+}
+
 build_projects() {
   source ~/.nvm/nvm.sh
+  fix_node_modules_permissions
 
   log "Installing & building utils..."
   cd "$PASIFLORA_DIR/utils" || return 1
