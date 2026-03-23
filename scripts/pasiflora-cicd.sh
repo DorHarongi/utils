@@ -261,8 +261,10 @@ while true; do
   NOW=$(date +%s)
 
   if check_for_changes; then
-    RESTART_NEEDED=1
-    LAST_CHANGE=$NOW
+    if [[ $RESTART_NEEDED -eq 0 ]]; then
+      RESTART_NEEDED=1
+      LAST_CHANGE=$NOW
+    fi
   fi
 
   if [[ $RESTART_NEEDED -eq 1 ]]; then
