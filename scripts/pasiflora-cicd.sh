@@ -89,16 +89,19 @@ pull_repos() {
 build_projects() {
   source ~/.nvm/nvm.sh
 
-  log "Building utils..."
+  log "Installing & building utils..."
   cd "$PASIFLORA_DIR/utils" || return 1
+  npm ci || return 1
   npm run build || return 1
 
-  log "Building userService..."
+  log "Installing & building userService..."
   cd "$PASIFLORA_DIR/userService" || return 1
+  npm ci || return 1
   npm run build || return 1
 
-  log "Building client (to dist/client-new for atomic deploy)..."
+  log "Installing & building client (to dist/client-new for atomic deploy)..."
   cd "$PASIFLORA_DIR/client" || return 1
+  npm ci || return 1
   ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
 
   return 0
