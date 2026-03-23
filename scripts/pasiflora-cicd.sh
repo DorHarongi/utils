@@ -202,7 +202,8 @@ deploy() {
 
   if [[ "$old_hash" != "$new_hash" ]]; then
     log "CI/CD script changed — restarting with new version..."
-    exec "$SCRIPT_PATH"
+    exec bash "$SCRIPT_PATH"
+    log "WARNING: exec failed — continuing with current version"
   fi
 
   build_projects || { log "Deploy aborted: build failed"; return 1; }
