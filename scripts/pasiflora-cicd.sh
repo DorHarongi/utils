@@ -7,6 +7,7 @@
 PASIFLORA_DIR=~/Desktop/pasiflora
 LOCKFILE="/tmp/pasiflora-cicd.lock"
 LOG_DIR="$PASIFLORA_DIR/.cicd-logs"
+SCRIPT_PATH="$PASIFLORA_DIR/utils/scripts/pasiflora-cicd.sh"
 
 # ============================================
 # Prevent multiple instances (EARLY + ATOMIC)
@@ -182,7 +183,19 @@ deploy() {
 
   # Pull and build FIRST - only stop services if we're about to succeed.
   # Previously: stop_services ran first, so if pull/build failed, services stayed down.
+  local old_hash
+  old_hash=$(md5sum "$SCRIPT_PATH" 2>/dev/null | awk '{print $1}')
+
   pull_repos || { log "Deploy aborted: pull failed"; return 1; }
+
+  local new_hash
+  new_hash=$(md5sum "$SCRIPT_PATH" 2>/dev/null | awk '{print $1}')
+
+  if [[ "$old_hash" != "$new_hash" ]]; then
+    log "CI/CD script changed — restarting with new version..."
+    exec "$SCRIPT_PATH"
+  fi
+
   build_projects || { log "Deploy aborted: build failed"; return 1; }
 
   # Ensure mongo credentials exist (gitignore'd, can be deleted by pull in edge cases)
