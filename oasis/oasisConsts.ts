@@ -62,7 +62,7 @@ export const oasisSpawnWeights: Record<OasisTier, number> = {
     [OasisTier.GOLDEN_OASIS]: 5,
 };
 
-export const OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR = 175;
+export const OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR = 36;
 
 // Dynamic oasis cap based on player count: max(10, ceil(playerCount * 0.4))
 export function getMaxOasesOnMap(playerCount: number): number {
