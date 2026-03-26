@@ -1,7 +1,6 @@
 export enum SkillCategory {
     SHARPER_BLADES = 'sharperBlades',
     HEROIC_SHIELD = 'heroicShield',
-    SELF_DEFENSE = 'selfDefense',
     SILENT_STEALTH = 'silentStealth',
     FILTHY_THIEF = 'filthyThief',
     GOLD_RUSH = 'goldRush',
@@ -37,7 +36,6 @@ const MEDIUM_BONUS: Record<SkillTier, number> = {
 export const SKILL_TIER_BONUSES: Record<SkillCategory, Record<SkillTier, number>> = {
     [SkillCategory.SHARPER_BLADES]: SMALL_BONUS,
     [SkillCategory.HEROIC_SHIELD]: SMALL_BONUS,
-    [SkillCategory.SELF_DEFENSE]: SMALL_BONUS,
     [SkillCategory.SILENT_STEALTH]: MEDIUM_BONUS,
     [SkillCategory.FILTHY_THIEF]: MEDIUM_BONUS,
     [SkillCategory.GOLD_RUSH]: SMALL_BONUS,
@@ -51,7 +49,6 @@ export type Skills = Record<SkillCategory, SkillTier | null>;
 export const EMPTY_SKILLS: Skills = {
     [SkillCategory.SHARPER_BLADES]: null,
     [SkillCategory.HEROIC_SHIELD]: null,
-    [SkillCategory.SELF_DEFENSE]: null,
     [SkillCategory.SILENT_STEALTH]: null,
     [SkillCategory.FILTHY_THIEF]: null,
     [SkillCategory.GOLD_RUSH]: null,
@@ -153,13 +150,6 @@ export const SKILL_METADATA: SkillMetadata[] = [
         description: 'Increases your village\'s total defense when being attacked by another player.',
         icon: 'heroic-shield.png',
         tierBonuses: SKILL_TIER_BONUSES[SkillCategory.HEROIC_SHIELD],
-    },
-    {
-        category: SkillCategory.SELF_DEFENSE,
-        name: 'Self Defense',
-        description: 'Reduces troop losses when raiding bosses or winning battles.',
-        icon: 'self-defense.png',
-        tierBonuses: SKILL_TIER_BONUSES[SkillCategory.SELF_DEFENSE],
     },
     {
         category: SkillCategory.SILENT_STEALTH,
