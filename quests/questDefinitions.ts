@@ -78,12 +78,12 @@ export const QUESTS: Quest[] = [
     id: 6,
     title: "Train Your First Army",
     description:
-      "Train 10 soldiers of any type. Soldiers take up population and fight for you in battles. Each soldier uses 1 population slot.",
+      "Train at least one soldier. Soldiers take up population and fight for you in battles. Each soldier uses 1 population slot.",
     hint: "Go to Arsenal and train troops",
     rewards: { wood: 2000, stone: 2000, crop: 3000 },
     condition: {
       type: QuestCompletionType.TRAIN_TROOPS,
-      count: 10,
+      count: 1,
     },
     highlightBuildings: ["arsenal"],
   },
@@ -91,12 +91,12 @@ export const QUESTS: Quest[] = [
     id: 7,
     title: "Hire Workers",
     description:
-      "Hire 50 workers to boost resource production. Workers also use population - your total population is workers + soldiers combined!",
+      "Hire some workers to boost resource production. Workers also use population - your total population is workers + soldiers combined!",
     hint: "Go to any Factory and hire workers",
     rewards: { wood: 3250, stone: 2500, crop: 1750 },
     condition: {
       type: QuestCompletionType.HIRE_WORKERS,
-      count: 50,
+      count: 1,
     },
     highlightBuildings: ["woodFactory", "stoneMine", "cropFarm"],
   },
