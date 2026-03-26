@@ -11,12 +11,11 @@ export enum DailyQuestCategory {
 
 export enum DailyQuestTrackingType {
     WIN_PVP_ATTACKS = 'WIN_PVP_ATTACKS',
-    DEFEND_ATTACKS = 'DEFEND_ATTACKS',
     STEAL_RESOURCES = 'STEAL_RESOURCES',
     DEAL_BOSS_DAMAGE = 'DEAL_BOSS_DAMAGE',
     ATTACK_DIFFERENT_BOSSES = 'ATTACK_DIFFERENT_BOSSES',
     TRAIN_TROOPS = 'TRAIN_TROOPS',
-    HIRE_WORKERS = 'HIRE_WORKERS',
+
     UPGRADE_BUILDING = 'UPGRADE_BUILDING',
     SUCCESSFUL_SPIES = 'SUCCESSFUL_SPIES',
     SEND_SUPPORT = 'SEND_SUPPORT',
@@ -24,9 +23,9 @@ export enum DailyQuestTrackingType {
     GARRISON_OASIS = 'GARRISON_OASIS',
     RETREAT_OASIS_WITH_RESOURCES = 'RETREAT_OASIS_WITH_RESOURCES',
     WIN_WITH_LOW_LOSSES = 'WIN_WITH_LOW_LOSSES',
-    TRAIN_SPECIFIC_TROOP = 'TRAIN_SPECIFIC_TROOP',
-    UPGRADE_BUILDING_TO_LEVEL = 'UPGRADE_BUILDING_TO_LEVEL',
     ATTACK_OASIS = 'ATTACK_OASIS',
+    WIN_PVP_STREAK = 'WIN_PVP_STREAK',
+    SPY_OASIS = 'SPY_OASIS',
 }
 
 export interface DailyQuestReward {
@@ -45,40 +44,24 @@ export interface DailyQuestDefinition {
     reward: DailyQuestReward;
     troopType?: string;
     minBuildingLevel?: number;
+    targetLabel?: [string, string];
 }
 
 export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     // PVP — risky (troop losses), rewards skew toward crop (armies consume crop)
     {
-        id: 'dq_win_pvp_1',
+        id: 'dq_win_pvp',
         title: 'Victorious Raid',
-        description: 'Win a PvP attack against another player.',
+        description: 'Win {target} PvP {target_label} today.',
         category: DailyQuestCategory.PVP,
         trackingType: DailyQuestTrackingType.WIN_PVP_ATTACKS,
         target: 1,
+        targetLabel: ['attack', 'attacks'],
         reward: { wood: 2500, stone: 2000, crop: 3500 },
     },
     {
-        id: 'dq_win_pvp_2',
-        title: 'Double Strike',
-        description: 'Win {target} PvP attacks against other players.',
-        category: DailyQuestCategory.PVP,
-        trackingType: DailyQuestTrackingType.WIN_PVP_ATTACKS,
-        target: 2,
-        reward: { wood: 4000, stone: 3500, crop: 5500 },
-    },
-    {
-        id: 'dq_defend_1',
-        title: 'Hold the Line',
-        description: 'Successfully defend against an attack.',
-        category: DailyQuestCategory.PVP,
-        trackingType: DailyQuestTrackingType.DEFEND_ATTACKS,
-        target: 1,
-        reward: { wood: 2500, stone: 4000, crop: 3000 },
-    },
-    {
         id: 'dq_steal_resources',
-        title: 'Plunder',
+        title: 'War Loot',
         description: 'Steal {target} total resources via PvP raids.',
         category: DailyQuestCategory.PVP,
         trackingType: DailyQuestTrackingType.STEAL_RESOURCES,
@@ -94,27 +77,27 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
         target: 1,
         reward: { wood: 4000, stone: 3500, crop: 5500 },
     },
+    {
+        id: 'dq_win_streak',
+        title: 'Win Streak',
+        description: 'Win {target} PvP attacks in a row.',
+        category: DailyQuestCategory.PVP,
+        trackingType: DailyQuestTrackingType.WIN_PVP_STREAK,
+        target: 2,
+        reward: { wood: 3500, stone: 3000, crop: 5000 },
+    },
     // PVE — moderate risk, balanced with slight stone bonus
     {
-        id: 'dq_boss_damage_5k',
+        id: 'dq_boss_damage',
         title: 'Monster Hunter',
-        description: 'Deal at least {target} damage to a boss in a single attack.',
+        description: 'Deal at least {target} total boss damage today.',
         category: DailyQuestCategory.PVE,
         trackingType: DailyQuestTrackingType.DEAL_BOSS_DAMAGE,
         target: 5_000,
         reward: { wood: 3000, stone: 3500, crop: 3000 },
     },
     {
-        id: 'dq_boss_damage_10k',
-        title: 'Beast Slayer',
-        description: 'Deal at least {target} total boss damage today.',
-        category: DailyQuestCategory.PVE,
-        trackingType: DailyQuestTrackingType.DEAL_BOSS_DAMAGE,
-        target: 10_000,
-        reward: { wood: 3500, stone: 4000, crop: 3500 },
-    },
-    {
-        id: 'dq_attack_2_bosses',
+        id: 'dq_attack_bosses',
         title: 'Boss Rush',
         description: 'Attack {target} different bosses today.',
         category: DailyQuestCategory.PVE,
@@ -124,40 +107,13 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     },
     // ECONOMY — risk-free, lower total, skews toward wood
     {
-        id: 'dq_train_100',
-        title: 'Enlistment',
+        id: 'dq_train',
+        title: 'Recruitment',
         description: 'Train {target} troops of any type.',
         category: DailyQuestCategory.ECONOMY,
         trackingType: DailyQuestTrackingType.TRAIN_TROOPS,
         target: 100,
         reward: { wood: 2000, stone: 1500, crop: 1500 },
-    },
-    {
-        id: 'dq_train_200',
-        title: 'Mobilization',
-        description: 'Train {target} troops of any type.',
-        category: DailyQuestCategory.ECONOMY,
-        trackingType: DailyQuestTrackingType.TRAIN_TROOPS,
-        target: 200,
-        reward: { wood: 3000, stone: 2500, crop: 2000 },
-    },
-    {
-        id: 'dq_hire_50',
-        title: 'Workforce Expansion',
-        description: 'Hire {target} workers across your villages.',
-        category: DailyQuestCategory.ECONOMY,
-        trackingType: DailyQuestTrackingType.HIRE_WORKERS,
-        target: 50,
-        reward: { wood: 1500, stone: 1250, crop: 1000 },
-    },
-    {
-        id: 'dq_hire_100',
-        title: 'Industrial Boom',
-        description: 'Hire {target} workers across your villages.',
-        category: DailyQuestCategory.ECONOMY,
-        trackingType: DailyQuestTrackingType.HIRE_WORKERS,
-        target: 100,
-        reward: { wood: 2500, stone: 1500, crop: 1500 },
     },
     {
         id: 'dq_upgrade_building',
@@ -170,7 +126,7 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     },
     // SCOUTING — moderate, skews toward crop
     {
-        id: 'dq_spy_2',
+        id: 'dq_spy',
         title: 'Intelligence Gathering',
         description: 'Complete {target} successful spy missions.',
         category: DailyQuestCategory.SCOUTING,
@@ -179,13 +135,14 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
         reward: { wood: 1500, stone: 2000, crop: 2500 },
     },
     {
-        id: 'dq_spy_3',
-        title: 'Master Spy',
-        description: 'Complete {target} successful spy missions.',
+        id: 'dq_spy_oasis',
+        title: 'Oasis Recon',
+        description: 'Spy on {target} {target_label}.',
         category: DailyQuestCategory.SCOUTING,
-        trackingType: DailyQuestTrackingType.SUCCESSFUL_SPIES,
-        target: 3,
-        reward: { wood: 2500, stone: 3000, crop: 3500 },
+        trackingType: DailyQuestTrackingType.SPY_OASIS,
+        target: 1,
+        targetLabel: ['oasis', 'oases'],
+        reward: { wood: 1500, stone: 2000, crop: 2500 },
     },
     // SOCIAL — easy, lower total, skews toward stone
     {
@@ -210,16 +167,17 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
     {
         id: 'dq_garrison_oasis',
         title: 'Land Grab',
-        description: 'Send troops to occupy an oasis.',
+        description: 'Occupy {target} {target_label} today.',
         category: DailyQuestCategory.OASIS,
         trackingType: DailyQuestTrackingType.GARRISON_OASIS,
         target: 1,
+        targetLabel: ['oasis', 'oases'],
         reward: { wood: 3500, stone: 2500, crop: 3000 },
     },
     {
         id: 'dq_retreat_oasis',
         title: 'Cash Out',
-        description: 'Retreat from an oasis with at least {target} of any resource.',
+        description: 'Collect {target} total resources from oasis retreats.',
         category: DailyQuestCategory.OASIS,
         trackingType: DailyQuestTrackingType.RETREAT_OASIS_WITH_RESOURCES,
         target: 50_000,
@@ -233,33 +191,6 @@ export const DAILY_QUEST_POOL: DailyQuestDefinition[] = [
         trackingType: DailyQuestTrackingType.ATTACK_OASIS,
         target: 1,
         reward: { wood: 3500, stone: 2500, crop: 3000 },
-    },
-    {
-        id: 'dq_garrison_oasis_2',
-        title: 'Oasis Conqueror',
-        description: 'Occupy {target} oases today.',
-        category: DailyQuestCategory.OASIS,
-        trackingType: DailyQuestTrackingType.GARRISON_OASIS,
-        target: 2,
-        reward: { wood: 5000, stone: 3500, crop: 4000 },
-    },
-    {
-        id: 'dq_retreat_oasis_100k',
-        title: 'Resource Hauler',
-        description: 'Collect at least {target} total resources from oases today.',
-        category: DailyQuestCategory.OASIS,
-        trackingType: DailyQuestTrackingType.RETREAT_OASIS_WITH_RESOURCES,
-        target: 100_000,
-        reward: { wood: 5500, stone: 4000, crop: 4500 },
-    },
-    {
-        id: 'dq_attack_oasis_2',
-        title: 'Oasis Warmonger',
-        description: 'Attack {target} occupied oases today.',
-        category: DailyQuestCategory.OASIS,
-        trackingType: DailyQuestTrackingType.ATTACK_OASIS,
-        target: 2,
-        reward: { wood: 4500, stone: 3500, crop: 4000 },
     },
 ];
 
@@ -298,27 +229,50 @@ export function getDailyQuestSeed(): number {
     return now.getUTCFullYear() * 10000 + (now.getUTCMonth() + 1) * 100 + now.getUTCDate();
 }
 
-const SCALED_TRACKING_TYPES = new Set<DailyQuestTrackingType>([
+const ATTACK_SCALED_TYPES = new Set<DailyQuestTrackingType>([
     DailyQuestTrackingType.DEAL_BOSS_DAMAGE,
     DailyQuestTrackingType.STEAL_RESOURCES,
-    DailyQuestTrackingType.TRAIN_TROOPS,
-    DailyQuestTrackingType.HIRE_WORKERS,
     DailyQuestTrackingType.RETREAT_OASIS_WITH_RESOURCES,
 ]);
 
-const BASE_ATTACK_POWER = 800;
+const POPULATION_SCALED_TYPES = new Set<DailyQuestTrackingType>([
+    DailyQuestTrackingType.TRAIN_TROOPS,
+]);
 
-export function scaleQuestTarget(
-    baseTarget: number,
-    trackingType: DailyQuestTrackingType,
-    totalAttackPower: number,
-): number {
-    if (!SCALED_TRACKING_TYPES.has(trackingType)) return baseTarget;
-    const ratio = totalAttackPower / BASE_ATTACK_POWER;
+const VILLAGE_SCALED_TYPES = new Set<DailyQuestTrackingType>([
+    DailyQuestTrackingType.GARRISON_OASIS,
+    DailyQuestTrackingType.WIN_PVP_ATTACKS,
+    DailyQuestTrackingType.SUCCESSFUL_SPIES,
+    DailyQuestTrackingType.SPY_OASIS,
+]);
+
+const BASE_ATTACK_POWER = 800;
+const BASE_POPULATION = 150;
+
+function scaleByRatio(baseTarget: number, ratio: number): number {
     if (ratio <= 1) {
         const multiplier = Math.max(0.3, ratio);
         return prettifyNumber(Math.max(1, Math.round(baseTarget * multiplier)));
     }
     const multiplier = Math.sqrt(ratio);
     return prettifyNumber(Math.round(baseTarget * multiplier));
+}
+
+export function scaleQuestTarget(
+    baseTarget: number,
+    trackingType: DailyQuestTrackingType,
+    totalAttackPower: number,
+    totalPopulation?: number,
+    villageCount?: number,
+): number {
+    if (VILLAGE_SCALED_TYPES.has(trackingType) && villageCount !== undefined && villageCount > 1) {
+        return prettifyNumber(Math.max(baseTarget, Math.round(baseTarget * Math.sqrt(villageCount))));
+    }
+    if (POPULATION_SCALED_TYPES.has(trackingType) && totalPopulation !== undefined) {
+        return scaleByRatio(baseTarget, totalPopulation / BASE_POPULATION);
+    }
+    if (ATTACK_SCALED_TYPES.has(trackingType)) {
+        return scaleByRatio(baseTarget, totalAttackPower / BASE_ATTACK_POWER);
+    }
+    return baseTarget;
 }

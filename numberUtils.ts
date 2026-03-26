@@ -4,7 +4,8 @@
  */
 export function prettifyNumber(n: number): number {
     if (n <= 0) return 0;
-    if (n < 100) return Math.round(n / 10) * 10;
+    if (n < 10) return n;
+    if (n < 100) return Math.round(n / 5) * 5;
 
     const magnitude = Math.pow(10, Math.floor(Math.log10(n)));
     const step = magnitude / 2;
