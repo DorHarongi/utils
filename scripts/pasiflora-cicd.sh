@@ -79,8 +79,10 @@ pull_repos() {
   for repo in "${REPOS[@]}"; do
     if [[ -d "$repo" ]]; then
       cd "$repo" || continue
-      log "  → Pulling $(basename "$repo")"
-      git pull origin "$BRANCH" || return 1
+      log "  → Resetting $(basename "$repo") to origin/$BRANCH"
+      git fetch origin "$BRANCH" || return 1
+      git reset --hard "origin/$BRANCH" || return 1
+      git clean -fd 2>/dev/null
     fi
   done
 
