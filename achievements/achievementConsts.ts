@@ -10,7 +10,8 @@ export type StatField =
     | 'totalStats.resourcesSentToClan'
     | 'totalStats.mythicBossDamage'
     | 'totalStats.supportTroopsSent'
-    | 'totalStats.oasesConquered';
+    | 'totalStats.oasesConquered'
+    | 'totalStats.pvpWinStreak';
 
 export interface Achievement {
     id: string;
@@ -249,5 +250,28 @@ export const ACHIEVEMENTS: Achievement[] = [
         description: 'Conquer 200 different oases.',
         threshold: 200,
         statField: 'totalStats.oasesConquered',
+    },
+
+    // --- Dominator ---
+    {
+        id: 'dominator_i',
+        name: 'Dominator I',
+        description: 'Win 5 PvP fights in a row.',
+        threshold: 5,
+        statField: 'totalStats.pvpWinStreak',
+    },
+    {
+        id: 'dominator_ii',
+        name: 'Dominator II',
+        description: 'Win 10 PvP fights in a row.',
+        threshold: 10,
+        statField: 'totalStats.pvpWinStreak',
+    },
+    {
+        id: 'dominator_iii',
+        name: 'Dominator III',
+        description: 'Win 15 PvP fights in a row.',
+        threshold: 15,
+        statField: 'totalStats.pvpWinStreak',
     },
 ];
