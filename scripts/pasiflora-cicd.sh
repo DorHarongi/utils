@@ -117,6 +117,29 @@ build_projects() {
   return 0
 }
 
+bump_version() {
+  local vfile="$PASIFLORA_DIR/userService/version.json"
+  local cur="1.0.0"
+  if [[ -f "$vfile" ]]; then
+    cur=$(grep -oP '"version"\s*:\s*"\K[^"]+' "$vfile" 2>/dev/null || echo "1.0.0")
+  fi
+
+  IFS='.' read -r major minor patch <<< "$cur"
+  patch=$((patch + 1))
+  if (( patch > 9 )); then
+    patch=0
+    minor=$((minor + 1))
+  fi
+  if (( minor > 9 )); then
+    minor=0
+    major=$((major + 1))
+  fi
+
+  local next="${major}.${minor}.${patch}"
+  echo "{\"version\":\"${next}\"}" > "$vfile"
+  log "Version bumped: $cur → $next"
+}
+
 deploy_frontend() {
   # Atomic swap: deploy client-new -> client (0 downtime)
   if [[ -d "$CLIENT_DIST/client-new" ]]; then
@@ -216,6 +239,7 @@ deploy() {
 
   stop_services
   start_services
+  bump_version
 
   log "=========================================="
   log "Deploy Complete"
