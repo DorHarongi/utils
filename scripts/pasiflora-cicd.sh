@@ -326,10 +326,12 @@ build_projects() {
   inactive=$(get_inactive_slot)
   local build_dir="$BUILD_BASE/$inactive"
 
+  local THROTTLE="taskset -c 2,3 nice -n 19 ionice -c 3"
+
   log "Installing & building utils..."
   cd "$PASIFLORA_DIR/utils" || return 1
-  nice -n 15 npm ci --prefer-offline || return 1
-  nice -n 15 npm run build || return 1
+  $THROTTLE npm ci --prefer-offline || return 1
+  $THROTTLE npm run build || return 1
 
   log "Installing & building userService (isolated: $build_dir)..."
   cd "$PASIFLORA_DIR/userService" || return 1
@@ -345,8 +347,8 @@ build_projects() {
 
   (
     cd "$build_dir" || exit 1
-    nice -n 15 npm ci --prefer-offline || exit 1
-    nice -n 15 npm run build || exit 1
+    $THROTTLE npm ci --prefer-offline || exit 1
+    $THROTTLE npm run build || exit 1
   ) || {
     log "userService build FAILED in $build_dir"
     rm -rf "$build_dir"
@@ -357,8 +359,8 @@ build_projects() {
 
   log "Installing & building client (to dist/client-new for atomic deploy)..."
   cd "$PASIFLORA_DIR/client" || return 1
-  nice -n 15 npm ci --prefer-offline || return 1
-  nice -n 15 npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
+  $THROTTLE npm ci --prefer-offline || return 1
+  $THROTTLE npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
 
   return 0
 }
