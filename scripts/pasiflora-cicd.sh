@@ -412,7 +412,9 @@ deploy() {
 
   if [[ "$old_hash" != "$new_hash" ]]; then
     if bash -n "$SCRIPT_PATH" 2>/dev/null; then
-      log "CI/CD script changed Ã¢â‚¬â€ restarting with new version..."
+      log "CI/CD script changed — restarting with new version..."
+      flock -u 9 2>/dev/null || true
+      exec 9>&- 2>/dev/null || true
       exec bash "$SCRIPT_PATH"
     else
       log "WARNING: New CI/CD script has syntax errors Ã¢â‚¬â€ continuing with current version"
@@ -465,9 +467,13 @@ check_for_changes() {
 # ============================================
 # Main
 # ============================================
-# Do not call stop_services here: SIGTERM (e.g. pkill when restarting this watcher)
-# would kill userService/db ports mid-deploy and cause nginx 502 until the next blue-green.
-trap 'log "CI/CD watcher exiting (userService not stopped)"; exit 0' SIGINT SIGTERM
+# Do not call stop_services here — restarting the watcher must not kill userService.
+# Use trap FUNC INT TERM — avoids "TERM: command not found" with SIGINT/SIGTERM on some bash.
+watcher_shutdown() {
+  log "CI/CD watcher exiting (userService not stopped)"
+  exit 0
+}
+trap watcher_shutdown INT TERM
 
 clear
 echo "=========================================="
