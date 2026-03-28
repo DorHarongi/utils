@@ -135,7 +135,9 @@ start_userservice_on_port() {
     export PORT="$port"
     [[ "$use_ssl" -eq 0 ]] && export NO_SSL=1
     source ~/.nvm/nvm.sh 2>/dev/null
-    cd "$build_dir/dist" && exec node main.js
+    cd "$build_dir/dist" || exit 1
+    node main.js
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] EXIT: node main.js on port $port exited with code $?"
   ) >> "$LOG_DIR/userService-$port.log" 2>&1 &
 }
 
@@ -338,7 +340,9 @@ start_persistent_watchdog() {
           export PASIFLORA_SVC=userservice
           export PORT="$wd_port"
           export NO_SSL=1
-          cd "$wd_build/dist" && exec node main.js
+          cd "$wd_build/dist" || exit 1
+          node main.js
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG-EXIT: node on port $wd_port exited with code $?"
         ) >> "$LOG_DIR/userService-$wd_port.log" 2>&1 &
         sleep 8
       fi
