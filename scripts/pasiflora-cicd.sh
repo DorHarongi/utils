@@ -114,12 +114,17 @@ get_inactive_slot() {
 kill_process_on_port() {
   local port="$1"
   local pids
-  pids=$(lsof -ti "tcp:$port" 2>/dev/null)
+  pids=$(sudo lsof -ti "tcp:$port" 2>/dev/null)
   if [[ -z "$pids" ]]; then
-    pids=$(ss -tlnp "sport = :$port" 2>/dev/null | grep -oP 'pid=\K\d+' | sort -u)
+    pids=$(sudo ss -tlnp "sport = :$port" 2>/dev/null | grep -oP 'pid=\K\d+' | sort -u)
+  fi
+  if [[ -z "$pids" ]]; then
+    sudo fuser -k "$port/tcp" 2>/dev/null
+    sleep 1
+    return
   fi
   if [[ -n "$pids" ]]; then
-    echo "$pids" | xargs kill -9 2>/dev/null
+    echo "$pids" | xargs sudo kill -9 2>/dev/null
     log "Killed process(es) on port $port (PIDs: $(echo $pids | tr '\n' ' '))"
     sleep 1
   fi
@@ -341,7 +346,7 @@ start_persistent_watchdog() {
       [[ ! -d "$wd_build/dist" ]] && continue
       if ! curl -s --max-time 2 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
         echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: port $wd_port ($wd_slot) unresponsive, restarting..."
-        fuser -k "$wd_port/tcp" 2>/dev/null
+        sudo fuser -k "$wd_port/tcp" 2>/dev/null
         sleep 1
         setsid bash -c "
           export PASIFLORA_SVC=userservice
