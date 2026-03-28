@@ -322,17 +322,17 @@ fix_node_modules_permissions() {
 }
 
 start_persistent_watchdog() {
-  log "Starting persistent watchdog (checks every 5s)"
+  log "Starting persistent watchdog (checks every 3s)"
   (
     source ~/.nvm/nvm.sh 2>/dev/null
     while true; do
-      sleep 5
+      sleep 3
       wd_slot=$(cat "$ACTIVE_SLOT_FILE" 2>/dev/null)
       [[ -z "$wd_slot" || "$wd_slot" == "legacy" ]] && continue
       if [[ "$wd_slot" == "blue" ]]; then wd_port=$BLUE_PORT; else wd_port=$GREEN_PORT; fi
       wd_build="$BUILD_BASE/$wd_slot"
       [[ ! -d "$wd_build/dist" ]] && continue
-      if ! curl -s --max-time 3 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
+      if ! curl -s --max-time 2 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
         echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: port $wd_port ($wd_slot) unresponsive, restarting..."
         fuser -k "$wd_port/tcp" 2>/dev/null
         sleep 1
@@ -344,7 +344,7 @@ start_persistent_watchdog() {
           node main.js
           echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG-EXIT: node on port $wd_port exited with code $?"
         ) >> "$LOG_DIR/userService-$wd_port.log" 2>&1 &
-        sleep 8
+        sleep 6
       fi
     done
   ) &
