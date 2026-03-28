@@ -326,7 +326,21 @@ build_projects() {
   log "Installing & building userService..."
   cd "$PASIFLORA_DIR/userService" || return 1
   npm ci || return 1
-  npm run build || return 1
+  # prebuild runs "rimraf dist" — if userService is still running from dist/, deleting
+  # dist kills the live Node process mid-deploy. Move it aside; Linux keeps the old
+  # inodes open until the old process exits; blue-green replaces with the new dist.
+  if [[ -d dist ]]; then
+    log "Preserving live build: dist -> dist.prev (avoids rimraf breaking running API)"
+    rm -rf dist.prev
+    mv dist dist.prev || return 1
+  fi
+  if ! npm run build; then
+    log "userService build failed — restoring dist.prev if present"
+    if [[ -d dist.prev && ! -d dist ]]; then
+      mv dist.prev dist || true
+    fi
+    return 1
+  fi
 
   log "Installing & building client (to dist/client-new for atomic deploy)..."
   cd "$PASIFLORA_DIR/client" || return 1
@@ -436,6 +450,9 @@ deploy() {
     log "ERROR: Blue-green deploy failed — aborting deploy (no frontend swap, no version bump)"
     return 1
   fi
+
+  rm -rf "$PASIFLORA_DIR/userService/dist.prev" 2>/dev/null
+  log "Removed userService/dist.prev (previous live build no longer needed)"
 
   restart_dbupdator
   deploy_frontend
