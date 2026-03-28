@@ -136,7 +136,14 @@ start_userservice_on_port() {
     export PASIFLORA_SVC=userservice PORT=$port NO_SSL=$no_ssl_val
     source ~/.nvm/nvm.sh 2>/dev/null
     cd '$build_dir/dist' || exit 1
-    node main.js
+    node -e \"
+      process.on('SIGTERM', () => { console.log('SIGNAL: SIGTERM'); process.exit(0); });
+      process.on('SIGINT',  () => { console.log('SIGNAL: SIGINT');  process.exit(0); });
+      process.on('SIGHUP',  () => { console.log('SIGNAL: SIGHUP');  process.exit(0); });
+      process.on('beforeExit', (c) => console.log('BEFORE_EXIT code=' + c));
+      process.on('exit', (c) => console.log('PROCESS_EXIT code=' + c));
+      require('./main');
+    \"
     echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] EXIT: node on port $port exited with code \$?\"
   " >> "$LOG_DIR/userService-$port.log" 2>&1 &
 }
