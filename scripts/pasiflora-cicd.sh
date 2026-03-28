@@ -67,6 +67,8 @@ CERT_DIR="$PASIFLORA_DIR/certs"
 CERT_FILE="$CERT_DIR/fullchain.pem"
 KEY_FILE="$CERT_DIR/privkey.pem"
 CLIENT_DIST="$PASIFLORA_DIR/client/dist"
+# Isolated npm ci + nest build so live userService is not killed when node_modules is wiped
+USER_SERVICE_BUILD_DIR="$PASIFLORA_DIR/.cicd-build/userService"
 NGINX_CONF_SRC="$PASIFLORA_DIR/utils/nginx-pasiflora.conf"
 NGINX_CONF_DST="/etc/nginx/sites-available/pasiflora"
 
@@ -126,13 +128,14 @@ kill_process_on_port() {
 start_userservice_on_port() {
   local port="$1"
   local use_ssl="${2:-0}"
-  log "Starting userService on port $port (SSL=$use_ssl)..."
+  local app_root="${USERSERVICE_APP_ROOT:-$PASIFLORA_DIR/userService}"
+  log "Starting userService on port $port (SSL=$use_ssl) app_root=$app_root..."
   (
     export PASIFLORA_SVC=userservice
     export PORT="$port"
     [[ "$use_ssl" -eq 0 ]] && export NO_SSL=1
     source ~/.nvm/nvm.sh 2>/dev/null
-    cd "$PASIFLORA_DIR/userService/dist" && exec node main.js
+    cd "$app_root/dist" && exec node main.js
   ) >> "$LOG_DIR/userService-$port.log" 2>&1 &
 }
 
@@ -324,23 +327,42 @@ build_projects() {
   npm run build || return 1
 
   log "Installing & building userService..."
+  unset USERSERVICE_APP_ROOT
   cd "$PASIFLORA_DIR/userService" || return 1
-  npm ci || return 1
-  # prebuild runs "rimraf dist" - if userService is still running from dist/, deleting
-  # dist kills the live Node process mid-deploy. Move it aside; Linux keeps the old
-  # inodes open until the old process exits; blue-green replaces with the new dist.
+  # prebuild runs "rimraf dist" - preserve live dist (same as dist.prev pattern).
+  # npm ci MUST NOT run in this tree while userService is up: deleting node_modules
+  # breaks the running Nest process (502 until deploy finishes). Build in isolation.
   if [[ -d dist ]]; then
     log "Preserving live build: dist -> dist.prev (avoids rimraf breaking running API)"
     rm -rf dist.prev
     mv dist dist.prev || return 1
   fi
-  if ! npm run build; then
+
+  rm -rf "$USER_SERVICE_BUILD_DIR"
+  mkdir -p "$USER_SERVICE_BUILD_DIR" || return 1
+  if command -v rsync &>/dev/null; then
+    rsync -a --exclude node_modules --exclude dist --exclude dist.prev --exclude .git ./ "$USER_SERVICE_BUILD_DIR/"
+  else
+    tar --exclude=node_modules --exclude=dist --exclude=dist.prev --exclude=.git -cf - . 2>/dev/null \
+      | (cd "$USER_SERVICE_BUILD_DIR" && tar xf -) || return 1
+  fi
+
+  (
+    cd "$USER_SERVICE_BUILD_DIR" || exit 1
+    npm ci || exit 1
+    npm run build || exit 1
+  ) || {
     log "userService build failed - restoring dist.prev if present"
+    cd "$PASIFLORA_DIR/userService" || return 1
     if [[ -d dist.prev && ! -d dist ]]; then
       mv dist.prev dist || true
     fi
+    rm -rf "$USER_SERVICE_BUILD_DIR"
     return 1
-  fi
+  }
+
+  export USERSERVICE_APP_ROOT="$USER_SERVICE_BUILD_DIR"
+  log "userService build OK (isolated); new instances will use $USER_SERVICE_BUILD_DIR until sync after blue-green"
 
   log "Installing & building client (to dist/client-new for atomic deploy)..."
   cd "$PASIFLORA_DIR/client" || return 1
@@ -440,6 +462,7 @@ deploy() {
   if [[ ! -f "$PASIFLORA_DIR/userService/mongo-credentials.txt" ]] || \
      [[ ! -f "$PASIFLORA_DIR/dbUpdator/mongo-credentials.txt" ]]; then
     log "Deploy aborted: mongo-credentials.txt missing (userService or dbUpdator)"
+    unset USERSERVICE_APP_ROOT
     return 1
   fi
 
@@ -448,7 +471,19 @@ deploy() {
 
   if ! bluegreen_deploy_userservice; then
     log "ERROR: Blue-green deploy failed - aborting deploy (no frontend swap, no version bump)"
+    unset USERSERVICE_APP_ROOT
     return 1
+  fi
+
+  # Active instance was stopped; safe to replace main tree with isolated build output
+  if [[ -n "${USERSERVICE_APP_ROOT:-}" && -d "${USERSERVICE_APP_ROOT}/dist" && -d "${USERSERVICE_APP_ROOT}/node_modules" ]]; then
+    log "Syncing userService dist + node_modules from isolated build dir..."
+    rm -rf "$PASIFLORA_DIR/userService/dist"
+    mv "${USERSERVICE_APP_ROOT}/dist" "$PASIFLORA_DIR/userService/dist"
+    rm -rf "$PASIFLORA_DIR/userService/node_modules"
+    mv "${USERSERVICE_APP_ROOT}/node_modules" "$PASIFLORA_DIR/userService/node_modules"
+    rm -rf "$USER_SERVICE_BUILD_DIR"
+    unset USERSERVICE_APP_ROOT
   fi
 
   rm -rf "$PASIFLORA_DIR/userService/dist.prev" 2>/dev/null
