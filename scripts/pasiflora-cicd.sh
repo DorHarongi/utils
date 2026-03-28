@@ -319,40 +319,33 @@ fix_node_modules_permissions() {
   done
 }
 
-start_active_watchdog() {
-  local active_slot active_port active_build
-  active_slot=$(get_active_slot)
-  [[ -z "$active_slot" || "$active_slot" == "legacy" ]] && return 0
-  active_port=$(get_slot_port "$active_slot")
-  active_build="$BUILD_BASE/$active_slot"
-  log "Starting watchdog for active service on port $active_port"
+start_persistent_watchdog() {
+  log "Starting persistent watchdog (checks every 5s)"
   (
+    source ~/.nvm/nvm.sh 2>/dev/null
     while true; do
-      sleep 10
-      if ! curl -s --max-time 5 "http://localhost:$active_port/health" >/dev/null 2>&1; then
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: port $active_port unresponsive, restarting..."
-        kill_process_on_port "$active_port"
+      sleep 5
+      wd_slot=$(cat "$ACTIVE_SLOT_FILE" 2>/dev/null)
+      [[ -z "$wd_slot" || "$wd_slot" == "legacy" ]] && continue
+      if [[ "$wd_slot" == "blue" ]]; then wd_port=$BLUE_PORT; else wd_port=$GREEN_PORT; fi
+      wd_build="$BUILD_BASE/$wd_slot"
+      [[ ! -d "$wd_build/dist" ]] && continue
+      if ! curl -s --max-time 3 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: port $wd_port ($wd_slot) unresponsive, restarting..."
+        fuser -k "$wd_port/tcp" 2>/dev/null
+        sleep 1
         (
           export PASIFLORA_SVC=userservice
-          export PORT="$active_port"
+          export PORT="$wd_port"
           export NO_SSL=1
-          source ~/.nvm/nvm.sh 2>/dev/null
-          cd "$active_build/dist" && exec node main.js
-        ) >> "$LOG_DIR/userService-$active_port.log" 2>&1 &
-        sleep 10
+          cd "$wd_build/dist" && exec node main.js
+        ) >> "$LOG_DIR/userService-$wd_port.log" 2>&1 &
+        sleep 8
       fi
     done
   ) &
   WATCHDOG_PID=$!
-  log "Watchdog PID: $WATCHDOG_PID"
-}
-
-stop_watchdog() {
-  if [[ -n "${WATCHDOG_PID:-}" ]]; then
-    kill "$WATCHDOG_PID" 2>/dev/null
-    wait "$WATCHDOG_PID" 2>/dev/null
-    unset WATCHDOG_PID
-  fi
+  log "Persistent watchdog PID: $WATCHDOG_PID"
 }
 
 build_projects() {
@@ -364,8 +357,6 @@ build_projects() {
   local build_dir="$BUILD_BASE/$inactive"
 
   local THROTTLE="taskset -c 2,3 nice -n 19 ionice -c 3"
-
-  start_active_watchdog
 
   log "Installing & building utils..."
   cd "$PASIFLORA_DIR/utils" || return 1
@@ -392,7 +383,6 @@ build_projects() {
   ) || {
     log "userService build FAILED in $build_dir"
     rm -rf "$build_dir"
-    stop_watchdog
     return 1
   }
 
@@ -403,7 +393,6 @@ build_projects() {
   $THROTTLE npm ci --prefer-offline || return 1
   $THROTTLE npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
 
-  stop_watchdog
   return 0
 }
 
@@ -547,6 +536,7 @@ check_for_changes() {
 # Main
 # ============================================
 watcher_shutdown() {
+  [[ -n "${WATCHDOG_PID:-}" ]] && kill "$WATCHDOG_PID" 2>/dev/null
   log "CI/CD watcher exiting, userService not stopped"
   exit 0
 }
@@ -559,6 +549,8 @@ echo "=========================================="
 
 log "Initial deploy..."
 deploy
+
+start_persistent_watchdog
 
 log "Watching for changes..."
 
