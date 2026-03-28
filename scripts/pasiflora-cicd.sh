@@ -328,8 +328,8 @@ build_projects() {
 
   log "Installing & building utils..."
   cd "$PASIFLORA_DIR/utils" || return 1
-  npm ci || return 1
-  npm run build || return 1
+  nice -n 15 npm ci --prefer-offline || return 1
+  nice -n 15 npm run build || return 1
 
   log "Installing & building userService (isolated: $build_dir)..."
   cd "$PASIFLORA_DIR/userService" || return 1
@@ -345,8 +345,8 @@ build_projects() {
 
   (
     cd "$build_dir" || exit 1
-    npm ci || exit 1
-    npm run build || exit 1
+    nice -n 15 npm ci --prefer-offline || exit 1
+    nice -n 15 npm run build || exit 1
   ) || {
     log "userService build FAILED in $build_dir"
     rm -rf "$build_dir"
@@ -357,8 +357,8 @@ build_projects() {
 
   log "Installing & building client (to dist/client-new for atomic deploy)..."
   cd "$PASIFLORA_DIR/client" || return 1
-  npm ci || return 1
-  npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
+  nice -n 15 npm ci --prefer-offline || return 1
+  nice -n 15 npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
 
   return 0
 }
