@@ -265,6 +265,7 @@ bluegreen_deploy_userservice() {
   # Normal blue-green swap
   # ----------------------------------------------------------
   log "=== Blue-green deploy: $active -> $inactive ==="
+  kill_process_on_port "$inactive_port"
   start_userservice_on_port "$inactive_port" 0 "$build_dir"
   if ! health_check "$inactive_port"; then
     log "ERROR: New instance failed health check on port $inactive_port"
@@ -318,6 +319,42 @@ fix_node_modules_permissions() {
   done
 }
 
+start_active_watchdog() {
+  local active_slot active_port active_build
+  active_slot=$(get_active_slot)
+  [[ -z "$active_slot" || "$active_slot" == "legacy" ]] && return 0
+  active_port=$(get_slot_port "$active_slot")
+  active_build="$BUILD_BASE/$active_slot"
+  log "Starting watchdog for active service on port $active_port"
+  (
+    while true; do
+      sleep 10
+      if ! curl -s --max-time 5 "http://localhost:$active_port/health" >/dev/null 2>&1; then
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: port $active_port unresponsive, restarting..."
+        kill_process_on_port "$active_port"
+        (
+          export PASIFLORA_SVC=userservice
+          export PORT="$active_port"
+          export NO_SSL=1
+          source ~/.nvm/nvm.sh 2>/dev/null
+          cd "$active_build/dist" && exec node main.js
+        ) >> "$LOG_DIR/userService-$active_port.log" 2>&1 &
+        sleep 10
+      fi
+    done
+  ) &
+  WATCHDOG_PID=$!
+  log "Watchdog PID: $WATCHDOG_PID"
+}
+
+stop_watchdog() {
+  if [[ -n "${WATCHDOG_PID:-}" ]]; then
+    kill "$WATCHDOG_PID" 2>/dev/null
+    wait "$WATCHDOG_PID" 2>/dev/null
+    unset WATCHDOG_PID
+  fi
+}
+
 build_projects() {
   source ~/.nvm/nvm.sh
   fix_node_modules_permissions
@@ -327,6 +364,8 @@ build_projects() {
   local build_dir="$BUILD_BASE/$inactive"
 
   local THROTTLE="taskset -c 2,3 nice -n 19 ionice -c 3"
+
+  start_active_watchdog
 
   log "Installing & building utils..."
   cd "$PASIFLORA_DIR/utils" || return 1
@@ -352,6 +391,7 @@ build_projects() {
   ) || {
     log "userService build FAILED in $build_dir"
     rm -rf "$build_dir"
+    stop_watchdog
     return 1
   }
 
@@ -362,6 +402,7 @@ build_projects() {
   $THROTTLE npm ci --prefer-offline || return 1
   $THROTTLE npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
 
+  stop_watchdog
   return 0
 }
 
