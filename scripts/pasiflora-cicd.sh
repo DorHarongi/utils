@@ -525,9 +525,8 @@ check_for_changes() {
   local found=1
   for repo in "${REPOS[@]}"; do
     cd "$repo" || continue
-    git fetch origin "$BRANCH" 2>/dev/null
     LOCAL=$(git rev-parse HEAD 2>/dev/null)
-    REMOTE=$(git rev-parse "origin/$BRANCH" 2>/dev/null)
+    REMOTE=$(git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $1}')
     if [[ -n "$LOCAL" && -n "$REMOTE" && "$LOCAL" != "$REMOTE" ]]; then
       log "Change detected in $(basename "$repo")"
       found=0
