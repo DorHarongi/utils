@@ -130,12 +130,12 @@ start_userservice_on_port() {
   local use_ssl="${2:-0}"
   local build_dir="${3:-$PASIFLORA_DIR/userService}"
   log "Starting userService on port $port (SSL=$use_ssl) from=$build_dir..."
+  local no_ssl_val=0
+  [[ "$use_ssl" -eq 0 ]] && no_ssl_val=1
   setsid bash -c "
-    export PASIFLORA_SVC=userservice
-    export PORT=$port
-    export NO_SSL=$( [[ \"$use_ssl\" -eq 0 ]] && echo 1 || echo 0 )
+    export PASIFLORA_SVC=userservice PORT=$port NO_SSL=$no_ssl_val
     source ~/.nvm/nvm.sh 2>/dev/null
-    cd \"$build_dir/dist\" || exit 1
+    cd '$build_dir/dist' || exit 1
     node main.js
     echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] EXIT: node on port $port exited with code \$?\"
   " >> "$LOG_DIR/userService-$port.log" 2>&1 &
