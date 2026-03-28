@@ -516,6 +516,9 @@ deploy() {
   ensure_certs
   ensure_upstream_file
 
+  # Kill any rogue process on legacy port (e.g. from IDE terminals)
+  kill_process_on_port "$LEGACY_PORT"
+
   if ! bluegreen_deploy_userservice; then
     log "ERROR: Blue-green deploy failed - aborting (no frontend swap, no version bump)"
     return 1
@@ -561,6 +564,9 @@ clear
 echo "=========================================="
 echo "   Pasiflora CI/CD Watcher (Blue-Green)"
 echo "=========================================="
+
+log "Killing any orphan process on legacy port $LEGACY_PORT..."
+kill_process_on_port "$LEGACY_PORT"
 
 log "Initial deploy..."
 deploy
