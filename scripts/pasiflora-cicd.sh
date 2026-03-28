@@ -224,7 +224,7 @@ bluegreen_deploy_userservice() {
   if [[ -z "$active" ]]; then
     log "=== First-time blue-green setup (legacy mode) ==="
     kill_process_on_port "$LEGACY_PORT"
-    start_userservice_on_port "$LEGACY_PORT" 1
+    start_userservice_on_port "$LEGACY_PORT" 0
     if ! health_check "$LEGACY_PORT"; then
       log "ERROR: userService failed to start on legacy port $LEGACY_PORT"
       return 1
@@ -430,7 +430,10 @@ deploy() {
   ensure_certs
   ensure_upstream_file
 
-  bluegreen_deploy_userservice || log "WARNING: Blue-green deploy had issues (see above)"
+  if ! bluegreen_deploy_userservice; then
+    log "ERROR: Blue-green deploy failed — aborting deploy (no frontend swap, no version bump)"
+    return 1
+  fi
 
   restart_dbupdator
   deploy_frontend
