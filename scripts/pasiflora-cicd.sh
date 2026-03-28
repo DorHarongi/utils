@@ -465,7 +465,9 @@ check_for_changes() {
 # ============================================
 # Main
 # ============================================
-trap 'log "Stopping CI/CD..."; stop_services; exit 0' SIGINT SIGTERM
+# Do not call stop_services here: SIGTERM (e.g. pkill when restarting this watcher)
+# would kill userService/db ports mid-deploy and cause nginx 502 until the next blue-green.
+trap 'log "CI/CD watcher exiting (userService not stopped)"; exit 0' SIGINT SIGTERM
 
 clear
 echo "=========================================="
