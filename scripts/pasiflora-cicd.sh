@@ -385,17 +385,10 @@ build_projects() {
   fi
 
   (
-    cd "$build_dir" || { echo "SUBSHELL: cd failed"; exit 1; }
-    echo "SUBSHELL: running npm ci in $(pwd)"
-    $THROTTLE npm ci --prefer-offline
-    ci_rc=$?
-    echo "SUBSHELL: npm ci exit code=$ci_rc"
-    [[ $ci_rc -ne 0 ]] && exit 1
-    echo "SUBSHELL: running npm run build"
-    $THROTTLE npm run build
-    build_rc=$?
-    echo "SUBSHELL: npm run build exit code=$build_rc"
-    [[ $build_rc -ne 0 ]] && exit 1
+    cd "$build_dir" || exit 1
+    $THROTTLE npm ci --prefer-offline || exit 1
+    $THROTTLE npm run build || exit 1
+    exit 0
   ) || {
     log "userService build FAILED in $build_dir"
     rm -rf "$build_dir"
