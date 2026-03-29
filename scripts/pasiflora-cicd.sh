@@ -269,8 +269,9 @@ bluegreen_deploy_userservice() {
     fi
     write_upstream "$inactive_port"
     deploy_nginx_config
-    kill_process_on_port "$LEGACY_PORT"
     echo "$inactive" > "$ACTIVE_SLOT_FILE"
+    sleep 4  # let watchdog pick up new active slot before killing old
+    kill_process_on_port "$LEGACY_PORT"
     log "=== Blue-green active: $inactive (port $inactive_port) ==="
     return 0
   fi
@@ -289,8 +290,10 @@ bluegreen_deploy_userservice() {
   fi
   write_upstream "$inactive_port"
   deploy_nginx_config
-  kill_process_on_port "$active_port"
   echo "$inactive" > "$ACTIVE_SLOT_FILE"
+  sleep 4  # let watchdog pick up new active slot before killing old
+  kill_process_on_port "$active_port"
+  kill_process_on_port "$LEGACY_PORT"
   log "=== Deploy complete: $inactive (port $inactive_port) ==="
   return 0
 }
@@ -341,7 +344,20 @@ start_persistent_watchdog() {
       sleep 3
       wd_slot=$(cat "$ACTIVE_SLOT_FILE" 2>/dev/null)
       [[ -z "$wd_slot" || "$wd_slot" == "legacy" ]] && continue
-      if [[ "$wd_slot" == "blue" ]]; then wd_port=$BLUE_PORT; else wd_port=$GREEN_PORT; fi
+      if [[ "$wd_slot" == "blue" ]]; then
+        wd_port=$BLUE_PORT
+        stale_port=$GREEN_PORT
+      else
+        wd_port=$GREEN_PORT
+        stale_port=$BLUE_PORT
+      fi
+      # Kill any rogue process on inactive slot or legacy port
+      for rp in $stale_port $LEGACY_PORT; do
+        local_pid=$(sudo lsof -t -i :"$rp" 2>/dev/null)
+        if [[ -n "$local_pid" ]]; then
+          sudo kill -9 $local_pid 2>/dev/null
+        fi
+      done
       wd_build="$BUILD_BASE/$wd_slot"
       [[ ! -d "$wd_build/dist" ]] && continue
       if ! curl -s --max-time 2 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
