@@ -54,6 +54,7 @@ REPOS=(
 # Blue-Green Configuration
 # ============================================
 ACTIVE_SLOT_FILE="$PASIFLORA_DIR/.bluegreen-active-slot"
+DEPLOY_LOCK="$PASIFLORA_DIR/.deploy-in-progress"
 NGINX_UPSTREAM_CONF="/etc/nginx/pasiflora-upstream.conf"
 BLUE_PORT=3001
 GREEN_PORT=3002
@@ -280,16 +281,19 @@ bluegreen_deploy_userservice() {
   # ----------------------------------------------------------
   if [[ "$active" == "legacy" ]]; then
     log "=== Transitioning from legacy to blue-green ==="
+    touch "$DEPLOY_LOCK"
     start_userservice_on_port "$inactive_port" 0 "$build_dir" 1
     if ! health_check "$inactive_port"; then
       log "ERROR: New instance failed health check on port $inactive_port"
       log "Keeping legacy service on port $LEGACY_PORT -- no disruption"
       kill_process_on_port "$inactive_port"
+      rm -f "$DEPLOY_LOCK"
       return 1
     fi
     write_upstream "$inactive_port"
     deploy_nginx_config
     echo "$inactive" > "$ACTIVE_SLOT_FILE"
+    rm -f "$DEPLOY_LOCK"
     sleep 4
     kill_process_on_port "$LEGACY_PORT"
     enable_crons "$inactive_port"
@@ -301,17 +305,20 @@ bluegreen_deploy_userservice() {
   # Normal blue-green swap
   # ----------------------------------------------------------
   log "=== Blue-green deploy: $active -> $inactive ==="
+  touch "$DEPLOY_LOCK"
   kill_process_on_port "$inactive_port"
   start_userservice_on_port "$inactive_port" 0 "$build_dir" 1
   if ! health_check "$inactive_port"; then
     log "ERROR: New instance failed health check on port $inactive_port"
     log "Keeping current active: $active (port $active_port) -- no disruption"
     kill_process_on_port "$inactive_port"
+    rm -f "$DEPLOY_LOCK"
     return 1
   fi
   write_upstream "$inactive_port"
   deploy_nginx_config
   echo "$inactive" > "$ACTIVE_SLOT_FILE"
+  rm -f "$DEPLOY_LOCK"
   sleep 4
   kill_process_on_port "$active_port"
   kill_process_on_port "$LEGACY_PORT"
@@ -374,13 +381,15 @@ start_persistent_watchdog() {
         wd_port=$GREEN_PORT
         stale_port=$BLUE_PORT
       fi
-      # Kill any rogue process on inactive slot or legacy port
-      for rp in $stale_port $LEGACY_PORT; do
-        local_pid=$(sudo lsof -t -i :"$rp" 2>/dev/null)
-        if [[ -n "$local_pid" ]]; then
-          sudo kill -9 $local_pid 2>/dev/null
-        fi
-      done
+      # Kill any rogue process on inactive slot or legacy port (skip during deploy)
+      if [[ ! -f "$DEPLOY_LOCK" ]]; then
+        for rp in $stale_port $LEGACY_PORT; do
+          local_pid=$(sudo lsof -t -i :"$rp" 2>/dev/null)
+          if [[ -n "$local_pid" ]]; then
+            sudo kill -9 $local_pid 2>/dev/null
+          fi
+        done
+      fi
       wd_build="$BUILD_BASE/$wd_slot"
       [[ ! -d "$wd_build/dist" ]] && continue
       if ! curl -s --max-time 2 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
