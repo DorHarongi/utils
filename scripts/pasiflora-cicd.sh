@@ -554,6 +554,7 @@ deploy() {
   if [[ "$old_hash" != "$new_hash" ]]; then
     if bash -n "$SCRIPT_PATH" 2>/dev/null; then
       log "CI/CD script changed - restarting with new version..."
+      [[ -n "${WATCHDOG_PID:-}" ]] && kill "$WATCHDOG_PID" 2>/dev/null
       flock -u 9 2>/dev/null || true
       exec 9>&- 2>/dev/null || true
       exec bash "$SCRIPT_PATH"
