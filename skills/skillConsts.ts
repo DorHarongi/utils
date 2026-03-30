@@ -182,7 +182,7 @@ export const SKILL_METADATA: SkillMetadata[] = [
     {
         category: SkillCategory.ADRENALINE_SURGE,
         name: 'Adrenaline Surge',
-        description: 'Increases your energy regeneration speed.',
+        description: 'Increases your energy regeneration speed. Stacks across all villages.',
         icon: 'andrenaline-surge.png',
         tierBonuses: SKILL_TIER_BONUSES[SkillCategory.ADRENALINE_SURGE],
     },
