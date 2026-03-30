@@ -611,12 +611,12 @@ check_for_changes() {
 # Main
 # ============================================
 watcher_shutdown() {
-  rm -f "$DEPLOY_LOCK"
   [[ -n "${WATCHDOG_PID:-}" ]] && kill "$WATCHDOG_PID" 2>/dev/null
   log "CI/CD watcher exiting, userService not stopped"
   exit 0
 }
-trap watcher_shutdown INT TERM EXIT
+trap watcher_shutdown INT TERM
+trap 'rm -f "$DEPLOY_LOCK"' EXIT
 
 clear
 echo "=========================================="
