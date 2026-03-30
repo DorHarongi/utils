@@ -433,6 +433,10 @@ start_persistent_watchdog() {
             echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG-EXIT: node on port $wd_port exited with code \$?\"
           " >> "$LOG_DIR/userService-$wd_port.log" 2>&1 &
           sleep 6
+          if curl -s --max-time 2 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
+            curl -s -X POST --max-time 5 "http://localhost:$wd_port/crons/enable" >/dev/null 2>&1
+            echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: Crons re-enabled on port $wd_port"
+          fi
           wd_fail_count=0
         fi
       else
