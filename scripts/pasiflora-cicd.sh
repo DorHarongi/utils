@@ -359,9 +359,10 @@ fix_node_modules_permissions() {
 }
 
 start_persistent_watchdog() {
-  log "Starting persistent watchdog (checks every 3s)"
+  log "Starting persistent watchdog (checks every 3s, restart after 3 consecutive failures)"
   (
     source ~/.nvm/nvm.sh 2>/dev/null
+    wd_fail_count=0
     while true; do
       sleep 3
       wd_slot=$(cat "$ACTIVE_SLOT_FILE" 2>/dev/null)
@@ -383,18 +384,25 @@ start_persistent_watchdog() {
       wd_build="$BUILD_BASE/$wd_slot"
       [[ ! -d "$wd_build/dist" ]] && continue
       if ! curl -s --max-time 2 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: port $wd_port ($wd_slot) unresponsive, restarting..."
-        sudo fuser -k "$wd_port/tcp" 2>/dev/null
-        sleep 1
-        setsid bash -c "
-          export PASIFLORA_SVC=userservice
-          export PORT=$wd_port
-          export NO_SSL=1
-          cd \"$wd_build/dist\" || exit 1
-          node main.js
-          echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG-EXIT: node on port $wd_port exited with code \$?\"
-        " >> "$LOG_DIR/userService-$wd_port.log" 2>&1 &
-        sleep 6
+        wd_fail_count=$((wd_fail_count + 1))
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: port $wd_port ($wd_slot) unresponsive ($wd_fail_count/3)"
+        if [[ $wd_fail_count -ge 3 ]]; then
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: 3 consecutive failures, restarting..."
+          sudo fuser -k "$wd_port/tcp" 2>/dev/null
+          sleep 1
+          setsid bash -c "
+            export PASIFLORA_SVC=userservice
+            export PORT=$wd_port
+            export NO_SSL=1
+            cd \"$wd_build/dist\" || exit 1
+            node main.js
+            echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG-EXIT: node on port $wd_port exited with code \$?\"
+          " >> "$LOG_DIR/userService-$wd_port.log" 2>&1 &
+          sleep 6
+          wd_fail_count=0
+        fi
+      else
+        wd_fail_count=0
       fi
     done
   ) &
