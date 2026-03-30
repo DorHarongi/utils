@@ -372,6 +372,10 @@ start_persistent_watchdog() {
     wd_fail_count=0
     while true; do
       sleep 3
+      if [[ -f "$DEPLOY_LOCK" ]]; then
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHDOG: Deploy in progress, skipping checks"
+        continue
+      fi
       wd_slot=$(cat "$ACTIVE_SLOT_FILE" 2>/dev/null)
       [[ -z "$wd_slot" || "$wd_slot" == "legacy" ]] && continue
       if [[ "$wd_slot" == "blue" ]]; then
@@ -381,15 +385,13 @@ start_persistent_watchdog() {
         wd_port=$GREEN_PORT
         stale_port=$BLUE_PORT
       fi
-      # Kill any rogue process on inactive slot or legacy port (skip during deploy)
-      if [[ ! -f "$DEPLOY_LOCK" ]]; then
-        for rp in $stale_port $LEGACY_PORT; do
-          local_pid=$(sudo lsof -t -i :"$rp" 2>/dev/null)
-          if [[ -n "$local_pid" ]]; then
-            sudo kill -9 $local_pid 2>/dev/null
-          fi
-        done
-      fi
+      # Kill any rogue process on inactive slot or legacy port
+      for rp in $stale_port $LEGACY_PORT; do
+        local_pid=$(sudo lsof -t -i :"$rp" 2>/dev/null)
+        if [[ -n "$local_pid" ]]; then
+          sudo kill -9 $local_pid 2>/dev/null
+        fi
+      done
       wd_build="$BUILD_BASE/$wd_slot"
       [[ ! -d "$wd_build/dist" ]] && continue
       if ! curl -s --max-time 2 "http://localhost:$wd_port/health" >/dev/null 2>&1; then
@@ -609,11 +611,12 @@ check_for_changes() {
 # Main
 # ============================================
 watcher_shutdown() {
+  rm -f "$DEPLOY_LOCK"
   [[ -n "${WATCHDOG_PID:-}" ]] && kill "$WATCHDOG_PID" 2>/dev/null
   log "CI/CD watcher exiting, userService not stopped"
   exit 0
 }
-trap watcher_shutdown INT TERM
+trap watcher_shutdown INT TERM EXIT
 
 clear
 echo "=========================================="
