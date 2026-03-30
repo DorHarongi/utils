@@ -39,7 +39,7 @@ export const SKILL_TIER_BONUSES: Record<SkillCategory, Record<SkillTier, number>
     [SkillCategory.SILENT_STEALTH]: MEDIUM_BONUS,
     [SkillCategory.FILTHY_THIEF]: MEDIUM_BONUS,
     [SkillCategory.GOLD_RUSH]: SMALL_BONUS,
-    [SkillCategory.QUICK_STEP]: SMALL_BONUS,
+    [SkillCategory.QUICK_STEP]: MEDIUM_BONUS,
     [SkillCategory.ADRENALINE_SURGE]: SMALL_BONUS,
     [SkillCategory.IRON_VAULT]: MEDIUM_BONUS,
 };
