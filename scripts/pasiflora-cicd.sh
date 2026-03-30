@@ -134,11 +134,12 @@ start_userservice_on_port() {
   local port="$1"
   local use_ssl="${2:-0}"
   local build_dir="${3:-$PASIFLORA_DIR/userService}"
-  log "Starting userService on port $port (SSL=$use_ssl) from=$build_dir..."
+  local no_crons="${4:-0}"
+  log "Starting userService on port $port (SSL=$use_ssl, NO_CRONS=$no_crons) from=$build_dir..."
   local no_ssl_val=0
   [[ "$use_ssl" -eq 0 ]] && no_ssl_val=1
   setsid bash -c "
-    export PASIFLORA_SVC=userservice PORT=$port NO_SSL=$no_ssl_val
+    export PASIFLORA_SVC=userservice PORT=$port NO_SSL=$no_ssl_val NO_CRONS=$no_crons
     source ~/.nvm/nvm.sh 2>/dev/null
     cd '$build_dir/dist' || exit 1
     node -e \"
@@ -169,6 +170,25 @@ health_check() {
     sleep "$HEALTH_INTERVAL"
   done
   log "Health check FAILED on port $port after $retries attempts"
+  return 1
+}
+
+# ============================================
+# Cron Management
+# ============================================
+enable_crons() {
+  local port="$1"
+  log "Enabling crons on port $port..."
+  local i
+  for i in 1 2 3 4 5; do
+    if curl -s -X POST --max-time 5 "http://localhost:$port/crons/enable" >/dev/null 2>&1; then
+      log "Crons enabled on port $port"
+      return 0
+    fi
+    log "Cron enable attempt $i failed, retrying..."
+    sleep 2
+  done
+  log "WARNING: Failed to enable crons on port $port after 5 attempts"
   return 1
 }
 
@@ -244,7 +264,7 @@ bluegreen_deploy_userservice() {
       return 1
     fi
     kill_process_on_port "$inactive_port"
-    start_userservice_on_port "$inactive_port" 0 "$build_dir"
+    start_userservice_on_port "$inactive_port" 0 "$build_dir" 0
     if ! health_check "$inactive_port"; then
       log "ERROR: userService failed to start on port $inactive_port"
       return 1
@@ -260,7 +280,7 @@ bluegreen_deploy_userservice() {
   # ----------------------------------------------------------
   if [[ "$active" == "legacy" ]]; then
     log "=== Transitioning from legacy to blue-green ==="
-    start_userservice_on_port "$inactive_port" 0 "$build_dir"
+    start_userservice_on_port "$inactive_port" 0 "$build_dir" 1
     if ! health_check "$inactive_port"; then
       log "ERROR: New instance failed health check on port $inactive_port"
       log "Keeping legacy service on port $LEGACY_PORT -- no disruption"
@@ -270,8 +290,9 @@ bluegreen_deploy_userservice() {
     write_upstream "$inactive_port"
     deploy_nginx_config
     echo "$inactive" > "$ACTIVE_SLOT_FILE"
-    sleep 4  # let watchdog pick up new active slot before killing old
+    sleep 4
     kill_process_on_port "$LEGACY_PORT"
+    enable_crons "$inactive_port"
     log "=== Blue-green active: $inactive (port $inactive_port) ==="
     return 0
   fi
@@ -281,7 +302,7 @@ bluegreen_deploy_userservice() {
   # ----------------------------------------------------------
   log "=== Blue-green deploy: $active -> $inactive ==="
   kill_process_on_port "$inactive_port"
-  start_userservice_on_port "$inactive_port" 0 "$build_dir"
+  start_userservice_on_port "$inactive_port" 0 "$build_dir" 1
   if ! health_check "$inactive_port"; then
     log "ERROR: New instance failed health check on port $inactive_port"
     log "Keeping current active: $active (port $active_port) -- no disruption"
@@ -291,9 +312,10 @@ bluegreen_deploy_userservice() {
   write_upstream "$inactive_port"
   deploy_nginx_config
   echo "$inactive" > "$ACTIVE_SLOT_FILE"
-  sleep 4  # let watchdog pick up new active slot before killing old
+  sleep 4
   kill_process_on_port "$active_port"
   kill_process_on_port "$LEGACY_PORT"
+  enable_crons "$inactive_port"
   log "=== Deploy complete: $inactive (port $inactive_port) ==="
   return 0
 }
