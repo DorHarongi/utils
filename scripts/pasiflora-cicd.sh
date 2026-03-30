@@ -112,6 +112,29 @@ get_inactive_slot() {
 # ============================================
 # Process Management
 # ============================================
+kill_rogue_instances() {
+  local active
+  active=$(get_active_slot)
+  local active_port
+  if [[ -n "$active" && "$active" != "legacy" ]]; then
+    active_port=$(get_slot_port "$active")
+  else
+    active_port="$LEGACY_PORT"
+  fi
+  local rogue_found=0
+  for port in $BLUE_PORT $GREEN_PORT $LEGACY_PORT; do
+    [[ "$port" == "$active_port" ]] && continue
+    local pids
+    pids=$(sudo lsof -ti "tcp:$port" 2>/dev/null)
+    if [[ -n "$pids" ]]; then
+      echo "$pids" | xargs sudo kill -9 2>/dev/null
+      log "SAFETY: Killed rogue process on port $port (active=$active, active_port=$active_port)"
+      rogue_found=1
+    fi
+  done
+  [[ $rogue_found -eq 1 ]] && sleep 1
+}
+
 kill_process_on_port() {
   local port="$1"
   local pids
@@ -543,6 +566,8 @@ deploy() {
   log "Starting Deploy"
   log "=========================================="
 
+  kill_rogue_instances
+
   local old_hash
   old_hash=$(md5sum "$SCRIPT_PATH" 2>/dev/null | awk '{print $1}')
 
@@ -573,9 +598,6 @@ deploy() {
 
   ensure_certs
   ensure_upstream_file
-
-  # Kill any rogue process on legacy port (e.g. from IDE terminals)
-  kill_process_on_port "$LEGACY_PORT"
 
   if ! bluegreen_deploy_userservice; then
     log "ERROR: Blue-green deploy failed - aborting (no frontend swap, no version bump)"
@@ -624,8 +646,8 @@ echo "=========================================="
 echo "   Pasiflora CI/CD Watcher (Blue-Green)"
 echo "=========================================="
 
-log "Killing any orphan process on legacy port $LEGACY_PORT..."
-kill_process_on_port "$LEGACY_PORT"
+log "Killing any rogue instances..."
+kill_rogue_instances
 
 log "Initial deploy..."
 deploy
@@ -636,6 +658,8 @@ log "Watching for changes..."
 
 while true; do
   NOW=$(date +%s)
+
+  kill_rogue_instances
 
   if check_for_changes; then
     if [[ $RESTART_NEEDED -eq 0 ]]; then
