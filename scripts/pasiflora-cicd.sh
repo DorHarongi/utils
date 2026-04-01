@@ -41,6 +41,7 @@ COOLDOWN=20
 # State
 RESTART_NEEDED=0
 LAST_CHANGE=0
+DB_UPDATOR_PID=""
 
 # Repos
 REPOS=(
@@ -358,6 +359,9 @@ stop_services() {
   kill_process_on_port "$BLUE_PORT"
   kill_process_on_port "$GREEN_PORT"
   kill_process_on_port "$LEGACY_PORT"
+  if [[ -n "$DB_UPDATOR_PID" ]]; then
+    kill "$DB_UPDATOR_PID" 2>/dev/null
+  fi
   pkill -f "node db-updator.js" 2>/dev/null
   sleep 1
   log "Services stopped."
@@ -536,15 +540,24 @@ deploy_frontend() {
 # dbUpdator restart (not client-facing, simple stop+start)
 # ============================================
 restart_dbupdator() {
-  log "Restarting dbUpdator..."
+  log "Restarting dbUpdator (with auto-restart)..."
+  if [[ -n "$DB_UPDATOR_PID" ]]; then
+    kill "$DB_UPDATOR_PID" 2>/dev/null
+  fi
   pkill -f "node db-updator.js" 2>/dev/null
   sleep 2
   (
     export PASIFLORA_SVC=dbupdator
     source ~/.nvm/nvm.sh 2>/dev/null
-    cd "$PASIFLORA_DIR/dbUpdator" && exec node db-updator.js
+    cd "$PASIFLORA_DIR/dbUpdator" || exit 1
+    while true; do
+      node db-updator.js
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] db-updator exited unexpectedly, restarting in 5s..."
+      sleep 5
+    done
   ) >> "$LOG_DIR/dbUpdator.log" 2>&1 &
-  log "dbUpdator restarted."
+  DB_UPDATOR_PID=$!
+  log "dbUpdator started with auto-restart (wrapper PID: $DB_UPDATOR_PID)"
 }
 
 # ============================================
