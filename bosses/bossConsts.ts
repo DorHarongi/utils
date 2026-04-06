@@ -129,8 +129,8 @@ export function getMaxClaimsPerClan(maxBosses: number): number {
   return Math.max(3, Math.floor(maxBosses * 0.25));
 }
 
-// Spawn check interval (30 minutes in cron expression)
-export const BOSS_SPAWN_CRON = "0 */30 * * * *";
+// Spawn check interval (every minute, 3.33% chance per tick ≈ 30 min avg)
+export const BOSS_SPAWN_CRON = "* * * * *";
 
 // Minimap & rarity colors (shared palette for bosses and oases)
 export const rarityColors: Record<string, string> = {
