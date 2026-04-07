@@ -41,6 +41,7 @@ COOLDOWN=20
 # State
 RESTART_NEEDED=0
 LAST_CHANGE=0
+SKIP_COOLDOWN=0
 DB_UPDATOR_PID=""
 
 # Repos
@@ -687,8 +688,9 @@ while true; do
   fi
 
   if [[ $RESTART_NEEDED -eq 1 ]]; then
-    if (( NOW - LAST_CHANGE >= COOLDOWN )); then
+    if [[ $SKIP_COOLDOWN -eq 1 ]] || (( NOW - LAST_CHANGE >= COOLDOWN )); then
       log "Cooldown passed -> redeploying"
+      SKIP_COOLDOWN=0
       deploy || log "Deploy failed -- will retry on next change detection"
       RESTART_NEEDED=0
 
@@ -696,7 +698,7 @@ while true; do
       if check_for_changes; then
         log "New changes detected during build -> queuing immediate redeploy"
         RESTART_NEEDED=1
-        LAST_CHANGE=$(( $(date +%s) - COOLDOWN ))
+        SKIP_COOLDOWN=1
       fi
     fi
   fi
