@@ -72,7 +72,7 @@ CERT_FILE="$CERT_DIR/fullchain.pem"
 KEY_FILE="$CERT_DIR/privkey.pem"
 CLIENT_DIST="$PASIFLORA_DIR/client/dist"
 NGINX_CONF_SRC="$PASIFLORA_DIR/utils/nginx-pasiflora.conf"
-NGINX_CONF_DST="/etc/nginx/sites-available/pasiflora"
+NGINX_CONF_DST="/etc/nginx/conf.d/pasiflora.conf"
 
 # ============================================
 # Helpers
