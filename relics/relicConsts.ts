@@ -26,10 +26,10 @@ export const RELIC_NAMES: RelicDefinition[] = [
     description: "An orb through which the gods once watched the world.",
   },
   {
-    id: "sigil_of_creation",
-    name: "Sigil of Creation",
+    id: "sigil_of_thunder",
+    name: "Sigil of Thunder",
     description:
-      "The mark that forged the world, source of ultimate authority.",
+      "A divine mark crackling with the fury of the storm, granting unmatched swiftness.",
   },
 ];
 
