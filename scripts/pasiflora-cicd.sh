@@ -696,7 +696,7 @@ while true; do
       if check_for_changes; then
         log "New changes detected during build -> queuing immediate redeploy"
         RESTART_NEEDED=1
-        LAST_CHANGE=$(date +%s)
+        LAST_CHANGE=$(( $(date +%s) - COOLDOWN ))
       fi
     fi
   fi
