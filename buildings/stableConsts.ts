@@ -14,13 +14,14 @@ export const getDetectionChance = (
     wallLevel: number,
     stableLevel: number,
     silentStealthBonus: number,
+    defenderRelicBonus: number = 0,
 ): number => {
     const wallBonus = Math.max(0, wallLevel) * WALL_DETECTION_PER_LEVEL;
     const stableIndex = clamp(stableLevel, 0, stableDetectionReductionByLevel.length - 1);
     const stableReduction = stableDetectionReductionByLevel[stableIndex];
     const stealthReduction = silentStealthBonus * 100;
 
-    const rawChance = BASE_DETECTION_CHANCE + wallBonus - stableReduction - stealthReduction;
+    const rawChance = BASE_DETECTION_CHANCE + wallBonus - stableReduction - stealthReduction + defenderRelicBonus;
     return clamp(Math.round(rawChance), 0, 100);
 };
 

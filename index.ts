@@ -34,4 +34,5 @@ export * from "./achievements/achievementConsts";
 export * from "./bosses/bossConsts";
 export * from "./clans/clanConsts";
 export * from "./relics/relicConsts";
+export * from "./combat/effectiveBonuses";
 export * from "./oasis";
