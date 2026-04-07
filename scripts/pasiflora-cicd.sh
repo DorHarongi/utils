@@ -494,6 +494,7 @@ build_projects() {
 
   log "Installing & building client (to dist/client-new for atomic deploy)..."
   cd "$PASIFLORA_DIR/client" || return 1
+  rm -rf .angular/cache
   $THROTTLE npm ci --prefer-offline || return 1
   $THROTTLE npx ng build --configuration=production --output-path=dist/client-new >> "$LOG_DIR/client-build.log" 2>&1 || return 1
 
@@ -690,6 +691,13 @@ while true; do
       log "Cooldown passed -> redeploying"
       deploy || log "Deploy failed -- will retry on next change detection"
       RESTART_NEEDED=0
+
+      # Re-check immediately: changes may have arrived during the build
+      if check_for_changes; then
+        log "New changes detected during build -> queuing immediate redeploy"
+        RESTART_NEEDED=1
+        LAST_CHANGE=$(date +%s)
+      fi
     fi
   fi
 
