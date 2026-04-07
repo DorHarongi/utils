@@ -10,13 +10,13 @@ export const RELIC_NAMES: RelicDefinition[] = [
     id: "apple_of_immortality",
     name: "Apple of Immortality",
     description: "Forbidden knowledge and immortality, the fruit of the gods.",
-    bonusLabel: "Defense +25%",
+    bonusLabel: "Defense +30%",
   },
   {
     id: "eternal_flame",
     name: "Eternal Flame",
     description: "Divine fire stolen from the gods, burning without end.",
-    bonusLabel: "Attack +25%",
+    bonusLabel: "Attack +30%",
   },
   {
     id: "chalice_of_ascension",
@@ -40,8 +40,8 @@ export const RELIC_NAMES: RelicDefinition[] = [
 ];
 
 // Relic bonus values
-export const RELIC_ATTACK_BONUS = 0.25;
-export const RELIC_DEFENSE_BONUS = 0.25;
+export const RELIC_ATTACK_BONUS = 0.30;
+export const RELIC_DEFENSE_BONUS = 0.30;
 export const RELIC_PRODUCTION_BONUS = 0.30;
 export const RELIC_SPY_DETECTION_BONUS = 40;
 export const RELIC_SPEED_BONUS = 0.50;
