@@ -28,7 +28,7 @@ export const RELIC_NAMES: RelicDefinition[] = [
     id: "all_seeing_orb",
     name: "All-Seeing Orb",
     description: "An orb through which the gods once watched the world.",
-    bonusLabel: "Spy Detection +40",
+    bonusLabel: "Spy Detection +40%",
   },
   {
     id: "sigil_of_thunder",
